@@ -1,0 +1,2 @@
+class InstanceEntry < ApplicationRecord
+end
