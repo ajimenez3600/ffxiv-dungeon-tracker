@@ -11,8 +11,8 @@ class InstanceEntriesController < ApplicationController
 
     respond_to do |format|
       if @instance_entry.save
-        format.html { redirect_to @instance_entry, notice: "Instance was successfully created." }
-        format.json { render :show, status: :created, location: @instance_entry }
+        format.html { render :new, notice: "Instance was successfully created." }
+        format.json { render json: {}, status: :created }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @instance_entry.errors, status: :unprocessable_entity }
@@ -23,8 +23,32 @@ class InstanceEntriesController < ApplicationController
   private
 
     # Only allow a list of trusted parameters through.
-    def instance_entry
-      puts params
-      params.require(:instance_entry).permit(:create)
+    def instance_entry_params
+      params[:queue_outlier?] = params.delete(:queue_outlier) if params[:queue_outlier].present?
+      params[:duration_outlier?] = params.delete(:duration_outlier) if params[:duration_outlier].present?
+      params[:xp_outlier?] = params.delete(:xp_outlier) if params[:xp_outlier].present?
+
+      params.permit(
+        :start_time,
+        :roulette_name,
+        :job_name,
+        :start_level,
+        :start_xp,
+        :queue_pop_time,
+        :instance_selection,
+        :finish_time,
+        :finish_level,
+        :finish_xp,
+        :xp_bonus,
+        :roulette_bonus,
+        :new_player_bonus,
+        :role_in_need_bonus,
+        :other_bonus,
+        :commends,
+        :queue_outlier?,
+        :duration_outlier?,
+        :xp_outlier?,
+        :notes
+      )
     end
 end

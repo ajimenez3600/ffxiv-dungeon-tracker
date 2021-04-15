@@ -4,40 +4,40 @@
 <% end %>
 
 <div class="container">
-  <div class="row">
-    <%= content_tag :form,
-      id: 'dungeon-form',
-      style: 'width: 100%;',
-      data: { jobs: @jobs, instances: @instances } do %>
+  <%= content_tag :div,
+    id: 'dungeon-form',
+    style: 'width: 100%;',
+    data: { jobs: @jobs, instances: @instances } do %>
+    <%= form_tag :action => 'create', id: @instance_entry do %>
       <div class="form-row">
         <h3>Pre-Instance<h3>
       </div>
 
       <div class="form-row">
-        <label for="start-time">Start Time</label>
-        <input id="start-time" name='start-time' type="datetime-local" class="form-control" />
+        <label for="start_time">Start Time</label>
+        <input id="start_time" name='start_time' type="datetime-local" class="form-control" />
       </div>
       <div class="form-row">
-        <label for="roulette-name">Roulette Name</label>
-        <input id="roulette-name" name='roulette-name' type="text" class="form-control" />
+        <label for="roulette_name">Roulette Name</label>
+        <input id="roulette_name" name='roulette_name' type="text" class="form-control" />
       </div>
       <div class="form-row">
-        <label for="job-name">Job Name</label>
-        <b-form-select name='job-name' :options="jobs" />
+        <label for="job_name">Job Name</label>
+        <b-form-select id="job_name" name='job_name' :options="jobs" />
       </div>
       <div class="form-row">
         <div class="col-6">
-          <label for="start-level">Starting Level</label>
-          <input id="start-level" name='start-level' type="number" class="form-control" />
+          <label for="start_level">Starting Level</label>
+          <input id="start_level" name='start_level' type="number" class="form-control" />
         </div>
         <div class="col-6">
-          <label for="start-xp">Starting XP</label>
-          <input id="start-xp" name='start-xp' type="number" class="form-control">
+          <label for="start_xp">Starting XP</label>
+          <input id="start_xp" name='start_xp' type="number" class="form-control">
         </div>
       </div>
       <div class="form-row">
-        <label for="queue-time">Queue Pop Time</label>
-        <input id="queue-time" name='queue-time' type="datetime-local" class="form-control" />
+        <label for="queue_pop_time">Queue Pop Time</label>
+        <input id="queue_pop_time" name='queue_pop_time' type="datetime-local" class="form-control" />
       </div>
 
       <div class="form-row">
@@ -51,7 +51,7 @@
           </b-card-header>
           <b-collapse :id='type.name' accordion='instances-accordion' role='tabpanel'>
             <b-card-body>
-              <b-form-radio-group name='instance-selection' :options='type.instances' stacked size='sm' />
+              <b-form-radio-group name='instance_selection' :options='type.instances' stacked size='sm' />
             </b-card-body>
           </b-collapse>
         </b-card>
@@ -61,38 +61,38 @@
         <h3>Post-Instance</h3>
       </div>
       <div class="form-row">
-        <label for="finish-time">Finish Time</label>
-        <input id="finish-time" name='finish-time' type="datetime-local" class="form-control" />
+        <label for="finish_time">Finish Time</label>
+        <input id="finish_time" name='finish_time' type="datetime-local" class="form-control" />
       </div>
       <div class="form-row">
         <div class="col-6">
-          <label for="finish-level">Finish Level</label>
-          <input id="finish-level" name='finish-level' type="number" class="form-control" />
+          <label for="finish_level">Finish Level</label>
+          <input id="finish_level" name='finish_level' type="number" class="form-control" />
         </div>
         <div class="col-6">
-          <label for="finish-xp">Finish XP</label>
-          <input id="finish-xp" name='finish-xp' type="number" class="form-control">
+          <label for="finish_xp">Finish XP</label>
+          <input id="finish_xp" name='finish_xp' type="number" class="form-control">
         </div>
       </div>
       <div class="form-row">
-        <label for="xp-bonus">XP Bonus %</label>
-        <input id="xp-bonus" name='xp-bonus' type="number" class="form-control" />
+        <label for="xp_bonus">XP Bonus %</label>
+        <input id="xp_bonus" name='xp_bonus' type="number" class="form-control" />
       </div>
       <div class="form-row">
-        <label for="roulette-bonus">Roulette Bonus XP</label>
-        <input id="roulette-bonus" name='roulette-bonus' type="number" class="form-control" />
+        <label for="roulette_bonus">Roulette Bonus XP</label>
+        <input id="roulette_bonus" name='roulette_bonus' type="number" class="form-control" />
       </div>
       <div class="form-row">
-        <label for="new-player-bonus">New Player Bonus XP</label>
-        <input id="new-player-bonus" name='new-player-bonus' type="number" class="form-control" />
+        <label for="new_player_bonus">New Player Bonus XP</label>
+        <input id="new_player_bonus" name='new_player_bonus' type="number" class="form-control" />
       </div>
       <div class="form-row">
-        <label for="role-in-need-bonus">Role in Need Bonus XP</label>
-        <input id="role-in-need-bonus" name='role-in-need-bonus' type="number" class="form-control" />
+        <label for="role_in_need_bonus">Role in Need Bonus XP</label>
+        <input id="role_in_need_bonus" name='role_in_need_bonus' type="number" class="form-control" />
       </div>
       <div class="form-row">
-        <label for="other-bonus">Other Bonus XP</label>
-        <input id="other-bonus" name='other-bonus' type="number" class="form-control" />
+        <label for="other_bonus">Other Bonus XP</label>
+        <input id="other_bonus" name='other_bonus' type="number" class="form-control" />
       </div>
       <div class="form-row">
         <label for="commends">Commends Received</label>
@@ -101,19 +101,19 @@
       <div class="form-row">
         <div role="group" tabindex="-1" class="bv-no-focus-ring">
           <div class="custom-control custom-checkbox">
-            <input type="checkbox" name='queue-outlier' class="custom-control-input" value="Are you queueing with someone?" id="option-0">
+            <input type="checkbox" name='queue_outlier' class="custom-control-input" value="Are you queueing with someone?" id="option-0">
             <label class="custom-control-label" for="option-0">
               <span>Are you queueing with someone?</span>
             </label>
           </div>
           <div class="custom-control custom-checkbox">
-            <input type="checkbox" name='duration-outlier' class="custom-control-input" value="Did you join an in-prog?" id="option-1">
+            <input type="checkbox" name='duration_outlier' class="custom-control-input" value="Did you join an in-prog?" id="option-1">
             <label class="custom-control-label" for="option-1">
               <span>Did you join an in-prog?</span>
             </label>
           </div>
           <div class="custom-control custom-checkbox">
-            <input type="checkbox" name='xp-outlier' class="custom-control-input" value="Did you hit level cap (or were at cap before starting)?" id="option-2">
+            <input type="checkbox" name='xp_outlier' class="custom-control-input" value="Did you hit level cap (or were at cap before starting)?" id="option-2">
             <label class="custom-control-label" for="option-2">
               <span>Did you hit level cap (or were at cap before starting)?</span>
             </label>
@@ -128,5 +128,5 @@
 
       <b-button type=submit>Submit</b-button>
     <% end %>
-  </div>
+  <% end %>
 </div>
