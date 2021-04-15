@@ -10,17 +10,31 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_15_220203) do
+ActiveRecord::Schema.define(version: 2021_04_15_230434) do
 
   create_table "instance_entries", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-  end
-
-  create_table "instances", force: :cascade do |t|
-    t.string "create"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "start_time"
+    t.string "roulette_name"
+    t.string "job_name"
+    t.decimal "start_level"
+    t.decimal "start_xp"
+    t.datetime "queue_pop_time"
+    t.string "instance_selection"
+    t.datetime "finish_time"
+    t.decimal "finish_level"
+    t.decimal "finish_xp"
+    t.decimal "xp_bonus"
+    t.decimal "roulette_bonus"
+    t.decimal "new_player_bonus"
+    t.decimal "role_in_need_bonus"
+    t.decimal "other_bonus"
+    t.decimal "commends"
+    t.boolean "queue_outlier?"
+    t.boolean "duration_outlier?"
+    t.boolean "xp_outlier?"
+    t.string "notes"
   end
 
   create_table "jobs", force: :cascade do |t|
