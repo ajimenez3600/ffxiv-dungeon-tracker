@@ -5,29 +5,15 @@
 // like app/views/layouts/application.html.erb.
 // All it does is render <div>Hello Vue</div> at the bottom of the page.
 
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import Vue from 'vue/dist/vue.esm'
+import App from '../app.vue'
+
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
-
-// document.addEventListener('DOMContentLoaded', () => {
-//   //Vue.http.headers.common['X-CSRF-Token'] = document.querySelector('meta[name=csrf-token"]').getAttribute('content')
-
-//   var element = document.getElementById('dungeon-form')
-//   if (element != null) {
-//     var d = JSON.parse(element.dataset.jobs)
-//     var app = new Vue({
-//       el: element,
-//       data() {
-//         return { jobs: d, dat: '' }
-//       }
-//     })
-//     console.log(app)
-//   }
-// })
-
 
 // The above code uses Vue without the compiler, which means you cannot
 // use Vue to target elements in your existing html templates. You would
@@ -41,9 +27,6 @@ Vue.use(IconsPlugin)
 //   {{message}}
 //   <app></app>
 // </div>
-
-import Vue from 'vue/dist/vue.esm'
-import App from '../app.vue'
 
 document.addEventListener('DOMContentLoaded', () => {
   var element = document.getElementById('dungeon-form')
