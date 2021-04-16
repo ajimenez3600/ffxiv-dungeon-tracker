@@ -45,13 +45,13 @@
       </div>
 
       <div class='accordion' role=tablist>
-        <b-card no-body class='mb-1' v-for="type in instances" :key="type.name">
+        <b-card no-body class='mb-1' v-for="key in Object.keys(instances)" :key="key">
           <b-card-header header-tag='header' class='p-1' role='tab'>
-            <b-button block @click="() => $root.$emit('bv::toggle::collapse', type.name)" variant='info'>{{type.name}}</b-button>
+            <b-button block @click="() => $root.$emit('bv::toggle::collapse', key)" variant='info'>{{key}}</b-button>
           </b-card-header>
-          <b-collapse :id='type.name' accordion='instances-accordion' role='tabpanel'>
+          <b-collapse :id='key' accordion='instances-accordion' role='tabpanel'>
             <b-card-body>
-              <b-form-radio-group name='instance_selection' :options='type.instances' stacked size='sm' />
+              <b-form-radio-group name='instance_selection' :options='instances[key].map((v)=>v.name)' stacked size='sm' />
             </b-card-body>
           </b-collapse>
         </b-card>

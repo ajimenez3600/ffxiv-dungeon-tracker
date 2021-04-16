@@ -3,7 +3,7 @@ class InstanceEntriesController < ApplicationController
   def new
     @instance_entry = InstanceEntry.new
     @jobs = ['dragoon', 'scholar']
-    @instances = [ { name: 'Dungeons (ARR)', instances: [ 'Castrum Meridianum', 'The Praetorium'] }, { name: 'Trials (ARR)', instances: ['The Navel (Hard)' ] } ]
+    @instances = Instance.all.group_by { |instance| "#{instance.instance_type} (#{instance.expansion})" }
   end
 
   def create
