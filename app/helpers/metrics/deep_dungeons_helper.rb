@@ -1,0 +1,2 @@
+module Metrics::DeepDungeonsHelper
+end
