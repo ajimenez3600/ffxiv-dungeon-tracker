@@ -3,7 +3,10 @@ class InstanceEntriesController < ApplicationController
   def new
     @instance_entry = InstanceEntry.new
     @jobs = ['dragoon', 'scholar']
-    @instances = Instance.all.group_by { |instance| "#{instance.instance_type} (#{instance.expansion})" }
+    @instances = Instance.all.group_by do |instance|
+      "#{instance.instance_type} (#{instance.expansion})" unless instance.expansion.blank?
+      "#{instance.instance_type}"
+    end
   end
 
   def create
