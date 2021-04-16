@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_15_230434) do
+ActiveRecord::Schema.define(version: 2021_04_15_234918) do
 
   create_table "instance_entries", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
@@ -35,6 +35,17 @@ ActiveRecord::Schema.define(version: 2021_04_15_230434) do
     t.boolean "duration_outlier?"
     t.boolean "xp_outlier?"
     t.string "notes"
+  end
+
+  create_table "instances", force: :cascade do |t|
+    t.string "name"
+    t.string "type"
+    t.integer "min_level"
+    t.integer "max_level"
+    t.integer "min_ilvl"
+    t.integer "max_ilvl"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "jobs", force: :cascade do |t|
