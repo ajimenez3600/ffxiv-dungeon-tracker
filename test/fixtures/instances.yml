@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  type: 
+  min_level: 1
+  max_level: 1
+  min_ilvl: 1
+  max_ilvl: 1
+
+two:
+  name: MyString
+  type: 
+  min_level: 1
+  max_level: 1
+  min_ilvl: 1
+  max_ilvl: 1
