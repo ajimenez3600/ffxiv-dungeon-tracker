@@ -4,13 +4,17 @@ class InstanceEntriesController < ApplicationController
     @instance_entry = InstanceEntry.new
     @jobs = ['dragoon', 'scholar']
     @instances = Instance.all.group_by do |instance|
-      "#{instance.instance_type} (#{instance.expansion})" unless instance.expansion.blank?
-      "#{instance.instance_type}"
+      if instance.expansion.blank?
+        "#{instance.instance_type}"
+      else
+        "#{instance.instance_type} (#{instance.expansion})"
+      end
     end
   end
 
   def create
     @instance_entry = InstanceEntry.new(instance_entry_params)
+    @instance_entry.instance = Instance.find_by_name(params[:instance_selection])
 
     respond_to do |format|
       if @instance_entry.save
@@ -38,7 +42,6 @@ class InstanceEntriesController < ApplicationController
         :start_level,
         :start_xp,
         :queue_pop_time,
-        :instance_selection,
         :finish_time,
         :finish_level,
         :finish_xp,

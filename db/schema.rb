@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_16_062358) do
+ActiveRecord::Schema.define(version: 2021_04_16_202630) do
 
   create_table "instance_entries", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
@@ -21,7 +21,6 @@ ActiveRecord::Schema.define(version: 2021_04_16_062358) do
     t.integer "start_level"
     t.integer "start_xp"
     t.datetime "queue_pop_time"
-    t.string "instance_selection"
     t.datetime "finish_time"
     t.integer "finish_level"
     t.integer "finish_xp"
@@ -35,6 +34,7 @@ ActiveRecord::Schema.define(version: 2021_04_16_062358) do
     t.boolean "duration_outlier?"
     t.boolean "xp_outlier?"
     t.string "notes"
+    t.integer "instance_id"
   end
 
   create_table "instances", force: :cascade do |t|

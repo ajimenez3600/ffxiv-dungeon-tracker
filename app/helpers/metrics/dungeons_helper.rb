@@ -1,0 +1,2 @@
+module Metrics::DungeonsHelper
+end

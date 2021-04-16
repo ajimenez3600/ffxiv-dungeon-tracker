@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Metrics Deep Dungeons</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @metrics_deep_dungeons.each do |metrics_deep_dungeon| %>
+      <tr>
+        <td><%= link_to 'Show', metrics_deep_dungeon %></td>
+        <td><%= link_to 'Edit', edit_metrics_deep_dungeon_path(metrics_deep_dungeon) %></td>
+        <td><%= link_to 'Destroy', metrics_deep_dungeon, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Metrics Deep Dungeon', new_metrics_deep_dungeon_path %>

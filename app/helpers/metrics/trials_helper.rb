@@ -1,0 +1,2 @@
+module Metrics::TrialsHelper
+end
