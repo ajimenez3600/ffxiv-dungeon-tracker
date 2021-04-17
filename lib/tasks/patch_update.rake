@@ -1,4 +1,10 @@
 namespace :patch_update do
+  desc "Fetches all data from xivapi"
+  task fetch_xivapi_data: :environment do
+    Rake::Task['patch_update:fetch_instances'].invoke
+    Rake::Task['patch_update:fetch_jobs'].invoke
+    Rake::Task['patch_update:fetch_xp_table'].invoke
+  end
 
   desc "Fetches Instance listing from xivapi"
   task fetch_instances: :environment do
@@ -114,7 +120,7 @@ namespace :patch_update do
       level = Level.new(
         number: xp_data['ID'],
         exp_to_next: xp_data['ExpToNext'],
-        recommended_dungeon: Instance.find_by_api_id(xp_data['ProperDungeon']),
+        recommended_dungeon_id: xp_data['ProperDungeon'],
         item_level_sync: xp_data['ItemLevelSync']
       )
 
