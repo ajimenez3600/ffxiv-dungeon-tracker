@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_17_062555) do
+ActiveRecord::Schema.define(version: 2021_04_17_071210) do
 
   create_table "instance_entries", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
@@ -83,6 +83,7 @@ ActiveRecord::Schema.define(version: 2021_04_17_062555) do
     t.integer "item_level_sync"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "recommended_dungeon"
   end
 
   create_table "roles", force: :cascade do |t|
