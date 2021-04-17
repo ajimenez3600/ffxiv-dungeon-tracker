@@ -1,62 +1,4 @@
 namespace :patch_update do
-  desc "Fetches Job listing from xivapi"
-  task fetch_jobs: :environment do
-    response = HTTParty.get('https://xivapi.com/classjob?limit=1000&columns=NameEnglish_en,Abbreviation,CanQueueForDuty,ClassJobCategory.Name,Role')
-    if response.code != 200 then
-      puts response.code
-      next
-    end
-
-    fetched_jobs = JSON.parse(response.body)['Results']
-    puts "fetched #{fetched_jobs.count} jobs"
-    fetched_jobs.each do |fetched_job|
-      next unless fetched_job['CanQueueForDuty'] == 1
-      next unless Job.find_by_name(fetched_job['NameEnglish_en']).nil?
-
-      job = Job.new(
-        name: fetched_job['NameInstance_en'],
-        abbr: fetched_job['Abbreviation'],
-        category: fetched_job['ClassJobCategory']['Name'],
-        role: Role.find_by_api_id(fetched_job['Role'])
-      )
-
-      if job.valid? then
-        job.save
-      else
-        puts job.errors
-      end
-    end
-    puts 'jobs imported!'
-  end
-
-  desc "Fetches XP Table data from xivapi"
-  task fetch_xp_table: :environment do
-    response = HTTParty.get('https://xivapi.com/paramgrow?limit=1000&columns=ID,ExpToNext,ProperDungeon,ItemLevelSync')
-    if response.code != 200 then
-      puts response.code
-      next
-    end
-
-    fetched_xp_data = JSON.parse(response.body)['Results']
-    puts "fetched #{fetch_xp_data.count} levels"
-    fetched_xp_data.each do |xp_data|
-      next unless Level.find_by_number(xp_data['ID'])
-
-      level = Level.new(
-        number: xp_data['ID'],
-        exp_to_next: xp_data['ExpToNext'],
-        recommended_dungeon: Instance.find_by_api_id(xp_data['ProperDungeon']),
-        item_level_sync: xp_data['ItemLevelSync']
-      )
-
-      if level.valid? then
-        level.save
-      else
-        puts level.errors
-      end
-    end
-    puts 'levels imported'
-  end
 
   desc "Fetches Instance listing from xivapi"
   task fetch_instances: :environment do
@@ -71,7 +13,7 @@ namespace :patch_update do
 
     fetched_instances = JSON.parse(response.body)['Results']
     puts "fetched #{fetched_instances.count} instances"
-    fetch_instances.each do |fetched_instance|
+    fetched_instances.each do |fetched_instance|
       # drop some of the instance types from getting into the database
       next if rejected_instances.include?(fetched_instance['ContentType']['Name'])
       puts fetched_instance['Name']
@@ -119,9 +61,68 @@ namespace :patch_update do
       if instance.valid? then
         instance.save
       else
-        puts instance.errors
+        puts "failed to save instance #{instance.name}", instance.errors
       end
     end
     puts 'instances imported'
+  end
+
+  desc "Fetches Job listing from xivapi"
+  task fetch_jobs: :environment do
+    response = HTTParty.get('https://xivapi.com/classjob?limit=1000&columns=NameEnglish_en,Abbreviation,CanQueueForDuty,ClassJobCategory.Name,Role')
+    if response.code != 200 then
+      puts response.code
+      next
+    end
+
+    fetched_jobs = JSON.parse(response.body)['Results']
+    puts "fetched #{fetched_jobs.count} jobs"
+    fetched_jobs.each do |fetched_job|
+      next unless fetched_job['CanQueueForDuty'] == 1
+      next unless Job.find_by_name(fetched_job['NameEnglish_en']).nil?
+
+      job = Job.new(
+        name: fetched_job['NameEnglish_en'],
+        abbr: fetched_job['Abbreviation'],
+        category: fetched_job['ClassJobCategory']['Name'],
+        role: Role.find_by_api_id(fetched_job['Role'])
+      )
+
+      if job.valid? then
+        job.save
+      else
+        puts job.errors
+      end
+    end
+    puts 'jobs imported!'
+  end
+
+  desc "Fetches XP Table data from xivapi"
+  task fetch_xp_table: :environment do
+    response = HTTParty.get('https://xivapi.com/paramgrow?limit=1000&columns=ID,ExpToNext,ProperDungeon,ItemLevelSync')
+    if response.code != 200 then
+      puts response.code
+      next
+    end
+
+    fetched_xp_data = JSON.parse(response.body)['Results']
+    puts "fetched #{fetched_xp_data.count} levels"
+    fetched_xp_data.each do |xp_data|
+      next unless Level.find_by_number(xp_data['ID'])
+
+      level = Level.new(
+        number: xp_data['ID'],
+        exp_to_next: xp_data['ExpToNext'],
+        recommended_dungeon: Instance.find_by_api_id(xp_data['ProperDungeon']),
+        item_level_sync: xp_data['ItemLevelSync']
+      )
+
+      if level.valid? then
+        level.save
+      else
+        puts level.errors
+      end
+    end
+    puts 'levels imported'
   end
 end

@@ -10,14 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_17_012351) do
+ActiveRecord::Schema.define(version: 2021_04_17_062555) do
 
   create_table "instance_entries", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "start_time"
     t.string "roulette_name"
-    t.string "job_name"
     t.integer "start_level"
     t.integer "start_xp"
     t.datetime "queue_pop_time"
@@ -35,6 +34,7 @@ ActiveRecord::Schema.define(version: 2021_04_17_012351) do
     t.boolean "xp_outlier?"
     t.string "notes"
     t.integer "instance_id"
+    t.integer "job_id"
   end
 
   create_table "instances", force: :cascade do |t|
@@ -69,6 +69,18 @@ ActiveRecord::Schema.define(version: 2021_04_17_012351) do
   end
 
   create_table "jobs", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "name"
+    t.string "abbr"
+    t.string "category"
+    t.integer "role_id"
+  end
+
+  create_table "levels", force: :cascade do |t|
+    t.integer "number"
+    t.integer "exp_to_next"
+    t.integer "item_level_sync"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

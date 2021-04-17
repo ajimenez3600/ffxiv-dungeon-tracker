@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  number: 1
+  exp_to_next: 1
+  item_level_sync: 1
+
+two:
+  number: 1
+  exp_to_next: 1
+  item_level_sync: 1
