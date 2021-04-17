@@ -2,7 +2,7 @@ class InstanceEntriesController < ApplicationController
 
   def new
     @instance_entry = InstanceEntry.new
-    @jobs = ['dragoon', 'scholar']
+    @jobs = Job.all.map(&:name)
     @instances = Instance.all.group_by do |instance|
       if instance.expansion.blank?
         "#{instance.instance_type}"
