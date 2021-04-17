@@ -15,6 +15,7 @@ class InstanceEntriesController < ApplicationController
   def create
     @instance_entry = InstanceEntry.new(instance_entry_params)
     @instance_entry.instance = Instance.find_by_name(params[:instance_selection])
+    @instance_entry.job = Job.find_by_name(params[:job_name])
 
     respond_to do |format|
       if @instance_entry.save

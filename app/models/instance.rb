@@ -1,3 +1,3 @@
 class Instance < ApplicationRecord
-    has_many :instace_entries
+  has_many :instance_entries
 end
