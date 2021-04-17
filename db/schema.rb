@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_17_072713) do
+ActiveRecord::Schema.define(version: 2021_04_17_184326) do
 
   create_table "instance_entries", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
@@ -29,12 +29,12 @@ ActiveRecord::Schema.define(version: 2021_04_17_072713) do
     t.integer "role_in_need_bonus"
     t.integer "other_bonus"
     t.integer "commends"
-    t.boolean "queue_outlier?"
-    t.boolean "duration_outlier?"
-    t.boolean "xp_outlier?"
     t.string "notes"
     t.integer "instance_id"
     t.integer "job_id"
+    t.boolean "queue_outlier"
+    t.boolean "duration_outlier"
+    t.boolean "xp_outlier"
   end
 
   create_table "instances", force: :cascade do |t|
@@ -48,16 +48,6 @@ ActiveRecord::Schema.define(version: 2021_04_17_072713) do
     t.integer "required_item_level"
     t.integer "level_sync"
     t.integer "item_level_sync"
-    t.boolean "alliance_roulette?"
-    t.boolean "expert_roulette?"
-    t.boolean "guild_hest_roulette?"
-    t.boolean "level_50_60_70_roulette?"
-    t.boolean "level_80_roulette?"
-    t.boolean "leveling_roulette?"
-    t.boolean "msq_roulette?"
-    t.boolean "mentor_roulette?"
-    t.boolean "normal_raid_roulette?"
-    t.boolean "trial_roulette?"
     t.integer "boss_1_exp"
     t.integer "boss_2_exp"
     t.integer "boss_3_exp"
@@ -66,6 +56,16 @@ ActiveRecord::Schema.define(version: 2021_04_17_072713) do
     t.integer "instance_clear_exp"
     t.integer "new_player_bonus_a"
     t.integer "new_player_bonus_b"
+    t.boolean "alliance_roulette"
+    t.boolean "expert_roulette"
+    t.boolean "guild_hest_roulette"
+    t.boolean "level_50_60_70_roulette"
+    t.boolean "level_80_roulette"
+    t.boolean "leveling_roulette"
+    t.boolean "msq_roulette"
+    t.boolean "mentor_roulette"
+    t.boolean "normal_raid_roulette"
+    t.boolean "trial_roulette"
   end
 
   create_table "jobs", force: :cascade do |t|
