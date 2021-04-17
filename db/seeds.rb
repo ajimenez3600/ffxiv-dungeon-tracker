@@ -5,3 +5,22 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+Role.create([
+  {
+    api_id: 1,
+    name: 'Tank'
+  },
+  {
+    api_id: 2,
+    name: 'Melee DPS'
+  },
+  {
+    api_id: 3,
+    name: 'Ranged DPS'
+  },
+  {
+    api_id: 4,
+    name: 'Healer'
+  }
+])
