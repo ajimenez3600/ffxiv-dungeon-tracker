@@ -3,13 +3,7 @@ class InstanceEntriesController < ApplicationController
   def new
     @instance_entry = InstanceEntry.new
     @jobs = Job.all.map(&:name)
-    @instances = Instance.all.group_by do |instance|
-      if instance.expansion.blank?
-        "#{instance.instance_type}"
-      else
-        "#{instance.instance_type} (#{instance.expansion})"
-      end
-    end
+    @instances = get_instance_groups
   end
 
   def create
@@ -57,5 +51,18 @@ class InstanceEntriesController < ApplicationController
         :xp_outlier?,
         :notes
       )
+    end
+
+    def get_instance_groups
+      groups = Instance.all.group_by(&:instance_type).map do |group|
+        { instance_type: group.first, count: groups[group.first].count }
+      end
+      Instance.all.group_by do |instance|
+        if groups.select { |g| g[:instance_type] == instance.instance_type }.first[:count] < 20 then
+          "#{instance.instance_type}"
+        else
+          "#{instance.instance_type} (#{instance.expansion})"
+        end
+      end
     end
 end
