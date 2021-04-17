@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_16_202630) do
+ActiveRecord::Schema.define(version: 2021_04_17_012351) do
 
   create_table "instance_entries", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
@@ -40,16 +40,42 @@ ActiveRecord::Schema.define(version: 2021_04_16_202630) do
   create_table "instances", force: :cascade do |t|
     t.string "name"
     t.string "instance_type"
-    t.integer "min_level"
-    t.integer "max_level"
-    t.integer "min_ilvl"
-    t.integer "max_ilvl"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "expansion"
+    t.integer "api_id"
+    t.integer "required_level"
+    t.integer "required_item_level"
+    t.integer "level_sync"
+    t.integer "item_level_sync"
+    t.boolean "alliance_roulette?"
+    t.boolean "expert_roulette?"
+    t.boolean "guild_hest_roulette?"
+    t.boolean "level_50_60_70_roulette?"
+    t.boolean "level_80_roulette?"
+    t.boolean "leveling_roulette?"
+    t.boolean "msq_roulette?"
+    t.boolean "mentor_roulette?"
+    t.boolean "normal_raid_roulette?"
+    t.boolean "trial_roulette?"
+    t.integer "boss_1_exp"
+    t.integer "boss_2_exp"
+    t.integer "boss_3_exp"
+    t.integer "boss_4_exp"
+    t.integer "final_boss_exp"
+    t.integer "instance_clear_exp"
+    t.integer "new_player_bonus_a"
+    t.integer "new_player_bonus_b"
   end
 
   create_table "jobs", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "roles", force: :cascade do |t|
+    t.integer "api_id"
+    t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

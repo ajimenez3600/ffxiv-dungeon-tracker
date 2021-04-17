@@ -1,31 +1,23 @@
 namespace :patch_update do
   desc "Fetches Job listing from xivapi"
   task fetch_jobs: :environment do
-    response = HTTParty.get('https://xivapi.com/classjob')
+    response = HTTParty.get('https://xivapi.com/classjob?limit=1000&columns=NameEnglish_en,Abbreviation,CanQueueForDuty,ClassJobCategory.Name,Role')
     if response.code != 200 then
       puts response.code
       next
     end
 
     fetched_jobs = JSON.parse(response.body)['Results']
-    puts "fetched #{fetched_jobs} jobs"
+    puts "fetched #{fetched_jobs.count} jobs"
     fetched_jobs.each do |fetched_job|
-      next unless Job.find_by_name(fetched_job['Name']).nil?
-
-      job_response = HTTParty.get("https://xivapi.com/classjob/#{fetched_job['ID']}")
-      if job_response.code != 200 then
-        puts job_response.code
-        next
-      end
-
-      job_data = JSON.parse(job_response.body)
-      next unless job_data['CanQueueForDuty'] == 1
+      next unless fetched_job['CanQueueForDuty'] == 1
+      next unless Job.find_by_name(fetched_job['NameEnglish_en']).nil?
 
       job = Job.new(
-        name: job_data['NameInstance_en'],
-        abbr: job_data['Abbreviation'],
-        category: job_data['ClassJobCategory']['Name'],
-        role: job_data['Role']
+        name: fetched_job['NameInstance_en'],
+        abbr: fetched_job['Abbreviation'],
+        category: fetched_job['ClassJobCategory']['Name'],
+        role: Role.find_by_api_id(fetched_job['Role'])
       )
 
       if job.valid? then
@@ -37,28 +29,54 @@ namespace :patch_update do
     puts 'jobs imported!'
   end
 
-  # get role https://xivapi.com/role
-  # get levels https://xivapi.com/level
-  # get instances https://xivapi.com/instancecontent
-
-  desc "Fetches Instance listing from GarlandTools"
-  task fetch_instances: :environment do
-    rejected_instances = ['Seasonal Dungeon', 'Gold Saucer', 'The Masked Carnivale', 'Disciples of the Land']
-    expansions = { 50 => 'ARR', 60 => 'HW', 70 => 'SB', 80 => 'ShB' }
-    response = HTTParty.get('https://www.garlandtools.org/db/doc/browse/en/2/instance.json')
+  desc "Fetches XP Table data from xivapi"
+  task fetch_xp_table: :environment do
+    response = HTTParty.get('https://xivapi.com/paramgrow?limit=1000&columns=ID,ExpToNext,ProperDungeon,ItemLevelSync')
     if response.code != 200 then
       puts response.code
       next
     end
 
-    fetched_instances = JSON.parse(response.body)['browse']
+    fetched_xp_data = JSON.parse(response.body)['Results']
+    puts "fetched #{fetch_xp_data.count} levels"
+    fetched_xp_data.each do |xp_data|
+      next unless Level.find_by_number(xp_data['ID'])
+
+      level = Level.new(
+        number: xp_data['ID'],
+        exp_to_next: xp_data['ExpToNext'],
+        recommended_dungeon: Instance.find_by_api_id(xp_data['ProperDungeon']),
+        item_level_sync: xp_data['ItemLevelSync']
+      )
+
+      if level.valid? then
+        level.save
+      else
+        puts level.errors
+      end
+    end
+    puts 'levels imported'
+  end
+
+  desc "Fetches Instance listing from xivapi"
+  task fetch_instances: :environment do
+    rejected_instances = ['Seasonal Dungeon', 'Gold Saucer', 'The Masked Carnivale', 'Disciples of the Land']
+    expansions = { 50 => 'ARR', 60 => 'HW', 70 => 'SB', 80 => 'ShB' }
+    
+    response = HTTParty.get('https://xivapi.com/InstanceContent?limit=1000&columns=ID,Name,ContentType.Name,ContentFinderCondition,BossExp1,BossExp2,BossExp3,BossExp4,FinalBossExp,InstanceClearExp,NewPlayerBonusA,NewPlayerBonusB')
+    if response.code != 200 then
+      puts response.code
+      next
+    end
+
+    fetched_instances = JSON.parse(response.body)['Results']
     puts "fetched #{fetched_instances.count} instances"
-    fetched_instances.each do |fetched_instance|
+    fetch_instances.each do |fetched_instance|
       # drop some of the instance types from getting into the database
+      next if rejected_instances.include?(fetched_instance['ContentType']['Name'])
+      puts fetched_instance['Name']
       # organize the remaining ones by expansion
-      next if rejected_instances.include?(fetched_instance['t'])
-      puts fetched_instance['n']
-      next unless Instance.find_by_name(fetched_instance['n']).nil?
+      next unless Instance.find_by_name(fetched_instance['Name'])
 
       expansion = ''
       expansions.keys.each do |cap|
@@ -67,11 +85,36 @@ namespace :patch_update do
         break
       end
 
-      instance = Instance.new(name: fetched_instance['n'], instance_type: fetched_instance['t'].singularize, expansion: expansion)
-      instance.min_level = fetched_instance['min_lvl'] if fetched_instance['min_lvl'].present?
-      instance.max_level = fetched_instance['max_lvl'] if fetched_instance['max_lvl'].present?
-      instance.min_ilvl = fetched_instance['min_ilvl'] if fetched_instance['min_ilvl'].present?
-      instance.max_ilvl = fetched_instance['max_ilvl'] if fetched_instance['max_ilvl'].present?
+      instance = Instance.new(
+        name: fetched_instance['Name'],
+        api_id: fetched_instance['ID'],
+        instance_type: fetched_instance['ContentType']['Name'],
+        required_level: fetched_instance['ContentFinderCondition']['ClassJobLevelRequired'],
+        required_item_level: fetched_instance['ContentFinderCondition']['ItemLevelRequired'],
+        level_sync: fetched_instance['ContentFinderCondition']['ClassJobLevelSync'],
+        item_level_sync: fetched_instance['ContentFinderCondition']['ItemLevelSync'],
+        expansion: expansion,
+
+        alliance_roulette?: fetched_instance['ContentFinderCondition']['AllianceRoulette'],
+        expert_roulette?: fetched_instance['ContentFinderCondition']['ExpertRoulette'],
+        guild_hest_roulette?: fetched_instance['ContentFinderCondition']['GuildHestRoulette'],
+        level_50_60_70_roulette?: fetched_instance['ContentFinderCondition']['Level50/60/70Roulette'],
+        level_80_roulette?: fetched_instance['ContentFinderCondition']['Level80Roulette'],
+        leveling_roulette?: fetched_instance['ContentFinderCondition']['LevelingRoulette'],
+        msq_roulette?: fetched_instance['ContentFinderCondition']['MSQRoulette'],
+        mentor_roulette?: fetched_instance['ContentFinderCondition']['MentorRoulette'],
+        normal_raid_roulette?: fetched_instance['ContentFinderCondition']['NormalRaidRoulette'],
+        trial_roulette?: fetched_instance['ContentFinderCondition']['TrialRoulette'],
+
+        boss_1_exp: fetched_instance['BossExp1'],
+        boss_2_exp: fetched_instance['BossExp2'],
+        boss_3_exp: fetched_instance['BossExp3'],
+        boss_4_exp: fetched_instance['BossExp4'],
+        final_boss_exp: fetched_instance['FinalBossExp'],
+        instance_clear_exp: fetched_instance['InstanceClearExp'],
+        new_player_bonus_a: fetched_instance['NewPlayerBonusA'],
+        new_player_bonus_b: fetched_instance['NewPlayerBonusB']
+      )
 
       if instance.valid? then
         instance.save
@@ -79,6 +122,6 @@ namespace :patch_update do
         puts instance.errors
       end
     end
-    puts 'instances imported!'
+    puts 'instances imported'
   end
 end
