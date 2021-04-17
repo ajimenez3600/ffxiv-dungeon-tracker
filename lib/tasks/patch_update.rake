@@ -15,10 +15,11 @@ namespace :patch_update do
     puts "fetched #{fetched_instances.count} instances"
     fetched_instances.each do |fetched_instance|
       # drop some of the instance types from getting into the database
+      next if fetched_instance['ContentType']['Name'].blank?
       next if rejected_instances.include?(fetched_instance['ContentType']['Name'])
       puts fetched_instance['Name']
       # organize the remaining ones by expansion
-      next unless Instance.find_by_name(fetched_instance['Name'])
+      next unless Instance.find_by_name(fetched_instance['Name']).nil?
 
       expansion = ''
       expansions.keys.each do |cap|
