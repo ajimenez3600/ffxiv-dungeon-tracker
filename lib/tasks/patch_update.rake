@@ -29,7 +29,7 @@ namespace :patch_update do
 
       expansion = ''
       expansions.keys.each do |cap|
-        next unless cap >= (fetched_instance['max_lvl'] || 999)
+        next unless cap >= (fetched_instance['ContentFinderCondition']['ClassJobLevelSync'] || 999)
         expansion = expansions[cap]
         break
       end
