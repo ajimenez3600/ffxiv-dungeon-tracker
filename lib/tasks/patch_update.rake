@@ -109,7 +109,7 @@ namespace :patch_update do
     fetched_xp_data = JSON.parse(response.body)['Results']
     puts "fetched #{fetched_xp_data.count} levels"
     fetched_xp_data.each do |xp_data|
-      next unless Level.find_by_number(xp_data['ID'])
+      next unless Level.find_by_number(xp_data['ID']).nil?
 
       level = Level.new(
         number: xp_data['ID'],
