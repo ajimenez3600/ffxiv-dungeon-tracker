@@ -87,7 +87,6 @@ namespace :patch_update do
         job = Job.new(name: fetched_job['NameEnglish_en'])
       end
 
-
       job.abbr = fetched_job['Abbreviation']
       job.category = fetched_job['ClassJobCategory']['Name']
       job.role = Role.find_by_api_id(fetched_job['Role'])
