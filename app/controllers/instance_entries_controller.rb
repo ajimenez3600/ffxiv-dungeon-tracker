@@ -4,12 +4,14 @@ class InstanceEntriesController < ApplicationController
     @instance_entry = InstanceEntry.new
     @jobs = Job.all.map(&:name)
     @instances = get_instance_groups
+    @roulettes = Roulette.all.map(&:name)
   end
 
   def create
     @instance_entry = InstanceEntry.new(instance_entry_params)
     @instance_entry.instance = Instance.find_by_name(params[:instance_selection])
     @instance_entry.job = Job.find_by_name(params[:job_name])
+    @instance_entry.roulette = Roulette.find_by_name(params[:roulette_name]) if params[:roulette_name].present?
 
     respond_to do |format|
       if @instance_entry.save
@@ -26,13 +28,8 @@ class InstanceEntriesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def instance_entry_params
-      params[:queue_outlier?] = params.delete(:queue_outlier) if params[:queue_outlier].present?
-      params[:duration_outlier?] = params.delete(:duration_outlier) if params[:duration_outlier].present?
-      params[:xp_outlier?] = params.delete(:xp_outlier) if params[:xp_outlier].present?
-
       params.permit(
         :start_time,
-        :roulette_name,
         :job_name,
         :start_level,
         :start_xp,
@@ -46,9 +43,9 @@ class InstanceEntriesController < ApplicationController
         :role_in_need_bonus,
         :other_bonus,
         :commends,
-        :queue_outlier?,
-        :duration_outlier?,
-        :xp_outlier?,
+        :queue_outlier,
+        :duration_outlier,
+        :xp_outlier,
         :notes
       )
     end

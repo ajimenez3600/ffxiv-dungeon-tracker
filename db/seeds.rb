@@ -7,20 +7,20 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 Role.create([
-  {
-    api_id: 1,
-    name: 'Tank'
-  },
-  {
-    api_id: 2,
-    name: 'Melee DPS'
-  },
-  {
-    api_id: 3,
-    name: 'Ranged DPS'
-  },
-  {
-    api_id: 4,
-    name: 'Healer'
-  }
+  { api_id: 1, name: 'Tank' },
+  { api_id: 2, name: 'Melee DPS' },
+  { api_id: 3, name: 'Ranged DPS' },
+  { api_id: 4, name: 'Healer' }
+])
+
+Roulette.create([
+  { name: 'Leveling' },
+  { name: 'Trials' },
+  { name: '50/60/70' },
+  { name: 'Alliance Raid' },
+  { name: 'Normal Raid' },
+  { name: 'MSQ' },
+  { name: 'Guildhest' },
+  { name: 'Level 80' },
+  { name: 'Expert' }
 ])
