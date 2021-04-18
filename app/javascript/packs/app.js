@@ -29,13 +29,17 @@ Vue.use(IconsPlugin)
 
 document.addEventListener('DOMContentLoaded', () => {
   var element = document.getElementById('dungeon-form')
+
   var jobs = JSON.parse(element.dataset.jobs)
   var instances = JSON.parse(element.dataset.instances)
+  var roulettes = JSON.parse(element.dataset.roulettes)
+
   const app = new Vue({
     el: element,
     data: {
       jobs,
       instances,
+      roulettes,
     }
   })
 })
