@@ -1,13 +1,8 @@
-<%= content_tag :div,
-  id: 'hello',
-  data: { jobs: @jobs, instances: @instances } do %>
-<% end %>
-
 <div class="container">
   <%= content_tag :div,
     id: 'dungeon-form',
     style: 'width: 100%;',
-    data: { jobs: @jobs, instances: @instances } do %>
+    data: { jobs: @jobs, instances: @instances, roulettes: @roulettes } do %>
     <%= form_tag :action => 'create', id: @instance_entry do %>
       <div class="form-row">
         <h3>Pre-Instance<h3>
@@ -19,7 +14,7 @@
       </div>
       <div class="form-row">
         <label for="roulette_name">Roulette Name</label>
-        <input id="roulette_name" name='roulette_name' type="text" class="form-control" />
+        <b-form-select id="roulette_name" name='roulette_name' :options="roulettes" />
       </div>
       <div class="form-row">
         <label for="job_name">Job Name</label>

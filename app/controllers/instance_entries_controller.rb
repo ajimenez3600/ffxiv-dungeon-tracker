@@ -51,7 +51,8 @@ class InstanceEntriesController < ApplicationController
     end
 
     def get_instance_groups
-      groups = Instance.all.group_by(&:instance_type).map do |group|
+      groups = Instance.all.group_by(&:instance_type)
+      groups = groups.map do |group|
         { instance_type: group.first, count: groups[group.first].count }
       end
       Instance.all.group_by do |instance|
