@@ -1,25 +1,8 @@
-<p id="notice"><%= notice %></p>
-
-<h1>Metrics Roulettes</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @metrics_roulettes.each do |metrics_roulette| %>
-      <tr>
-        <td><%= link_to 'Show', metrics_roulette %></td>
-        <td><%= link_to 'Edit', edit_metrics_roulette_path(metrics_roulette) %></td>
-        <td><%= link_to 'Destroy', metrics_roulette, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Metrics Roulette', new_metrics_roulette_path %>
+<div class='container'>
+  <%= content_tag :div
+    id: 'roulette-metrics',
+    style: 'width: 100%',
+    data: { entries: @instance_entries } do %>
+    
+  <% end %>
+</div>

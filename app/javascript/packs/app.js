@@ -1,12 +1,6 @@
-/* eslint no-console: 0 */
-// Run this example by adding <%= javascript_pack_tag 'hello_vue' %> (and
-// <%= stylesheet_pack_tag 'hello_vue' %> if you have styles in your component)
-// to the head of your layout file,
-// like app/views/layouts/application.html.erb.
-// All it does is render <div>Hello Vue</div> at the bottom of the page.
-
 import Vue from 'vue/dist/vue.esm'
 
+import Chart from 'chart.js/auto';
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
@@ -14,9 +8,6 @@ import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 
-// The above code uses Vue without the compiler, which means you cannot
-// use Vue to target elements in your existing html templates. You would
-// need to always use single file components.
 // To be able to target elements in your existing html/erb templates,
 // comment out the above code and uncomment the below
 // Add <%= javascript_pack_tag 'hello_vue' %> to your layout
@@ -29,17 +20,42 @@ Vue.use(IconsPlugin)
 
 document.addEventListener('DOMContentLoaded', () => {
   var element = document.getElementById('dungeon-form')
+  if (typeof(element) != 'undefined') {
+    const app = new Vue({
+      el: element,
+      data: {
+        jobs: JSON.parse(element.dataset.jobs),
+        instances: JSON.parse(element.dataset.instances),
+        roulettes: JSON.parse(element.dataset.roulettes),
+      }
+    })
+  }
 
-  var jobs = JSON.parse(element.dataset.jobs)
-  var instances = JSON.parse(element.dataset.instances)
-  var roulettes = JSON.parse(element.dataset.roulettes)
+  element = document.getElementById('roulette-metrics')
+  if (typeof(element) != 'undefined') {
+    const app = new Vue({
+      el: element,
+      data: {
+        entries: JSON.parse(element.data.entries),
+      }
+    })
+  }
 
-  const app = new Vue({
-    el: element,
-    data: {
-      jobs,
-      instances,
-      roulettes,
-    }
-  })
+  element = document.getElementById('instance-type-metrics')
+  if (typeof(element) != 'undefined') {
+    const app = new Vue({
+      el: element,
+      data: {
+      }
+    })
+  }
+
+  element = document.getElementById('roulette-xp-calculator')
+  if (typeof(element) != 'undefined') {
+    const app = new Vue({
+      el: element,
+      data: {
+      }
+    })
+  }
 })

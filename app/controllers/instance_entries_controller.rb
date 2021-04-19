@@ -30,7 +30,6 @@ class InstanceEntriesController < ApplicationController
     def instance_entry_params
       params.permit(
         :start_time,
-        :job_name,
         :start_level,
         :start_xp,
         :queue_pop_time,
