@@ -19,44 +19,49 @@ Vue.use(IconsPlugin)
 // </div>
 
 document.addEventListener('DOMContentLoaded', () => {
-  var element = document.getElementById('dungeon-form')
-  if (element !== null) {
-    console.log(element)
-    const app = new Vue({
-      el: element,
+  var navbar = document.getElementById('top-navbar')
+  if (navbar !== null) {
+    const navbarApp = new Vue({
+      el: navbar,
+    })
+  }
+
+  var dungeonForm = document.getElementById('dungeon-form')
+  if (dungeonForm !== null) {
+    const dungoenFormApp = new Vue({
+      el: dungeonForm,
       data: {
-        jobs: JSON.parse(element.dataset.jobs),
-        instances: JSON.parse(element.dataset.instances),
-        roulettes: JSON.parse(element.dataset.roulettes),
+        jobs: JSON.parse(dungeonForm.dataset.jobs),
+        instances: JSON.parse(dungeonForm.dataset.instances),
+        roulettes: JSON.parse(dungeonForm.dataset.roulettes),
       },
     })
   }
 
-  element = document.getElementById('roulette-metrics')
-  if (element !== null) {
-    console.log(element)
-    const app = new Vue({
-      el: element,
+  var rouletteMetrics = document.getElementById('roulette-metrics')
+  if (rouletteMetrics !== null) {
+    const rouletteMetricsApp = new Vue({
+      el: rouletteMetrics,
       data: {
-        entries: JSON.parse(element.dataset.entries),
-        roulettes: JSON.parse(element.dataset.roulettes)
+        entries: JSON.parse(rouletteMetrics.dataset.entries),
+        roulettes: JSON.parse(rouletteMetrics.dataset.roulettes)
       },
     })
   }
 
-  element = document.getElementById('instance-type-metrics')
-  if (element !== null) {
-    const app = new Vue({
-      el: element,
+  var instanceMetrics = document.getElementById('instance-type-metrics')
+  if (instanceMetrics !== null) {
+    const instanceMetricsApp = new Vue({
+      el: instanceMetrics,
       data: {
       }
     })
   }
 
-  element = document.getElementById('roulette-xp-calculator')
-  if (element !== null) {
-    const app = new Vue({
-      el: element,
+  var xpCalculator = document.getElementById('roulette-xp-calculator')
+  if (xpCalculator !== null) {
+    const xpCalculatorApp = new Vue({
+      el: xpCalculator,
       data: {
       }
     })
