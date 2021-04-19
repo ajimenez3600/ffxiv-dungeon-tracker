@@ -1,8 +1,21 @@
 <div class='container'>
-  <%= content_tag :div
+  <%= content_tag :div,
     id: 'roulette-metrics',
     style: 'width: 100%',
-    data: { entries: @instance_entries } do %>
-    
+    data: { entries: @instance_groups.to_json, roulettes: @roulette_names.to_json } do %>
+    <b-container>
+      <b-row>
+        <b-col>
+          <b-table :columns=roulettes :items=entries>
+            <template #cell(level)="data">
+              {{ data.value }}
+            </template>
+            <template #cell()="data">
+              {{ data.value.average }}
+            </template>
+          </b-table>
+        </b-col>
+      </b-row>
+    </b-container>
   <% end %>
 </div>

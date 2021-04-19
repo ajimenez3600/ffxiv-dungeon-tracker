@@ -43,7 +43,7 @@
         <div class='accordion' role=tablist>
           <b-card no-body class='mb-1' v-for="key in Object.keys(instances)" :key="key">
             <b-card-header header-tag='header' class='p-1' role='tab'>
-              <b-button block @click="() => $root.$emit('bv::toggle::collapse', key)" variant='info'>{{key}}</b-button>
+              <b-button block :style="key.color" @click="() => $root.$emit('bv::toggle::collapse', key)" variant='info'>{{key}}</b-button>
             </b-card-header>
             <b-collapse :id='key' accordion='instances-accordion' role='tabpanel'>
               <b-card-body>

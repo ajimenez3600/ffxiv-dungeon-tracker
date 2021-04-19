@@ -26,7 +26,7 @@ namespace :patch_update do
       instance = Instance.find_by_name(fetched_instance['Name'])
       if instance.nil? then
         puts fetched_instance['Name']
-        instance = Instance.new(fetched_instance['Name'])
+        instance = Instance.new({name: fetched_instance['Name']})
       end
 
       instance.api_id = fetched_instance['ID']

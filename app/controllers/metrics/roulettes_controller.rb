@@ -1,10 +1,18 @@
 class Metrics::RoulettesController < ApplicationController
   def index
-    no_roulette = Roulette.find_by_name('No Roulette')
-    @instance_entries = InstanceEntry.all
-      .select { |e| e.roulette != no_roulette }
-      .map { |e| { :level => e.start_level, :roulette => e.roulette.name, :roulette_bonus => e.roulette_bonus } }
-      .sort_by { |e| e[:level] }
-      .group_by { |e| e[:level] }
+    levels = InstanceEntry.all.map(&:start_level).uniq
+    roulettes = InstanceEntry.all.map{ |e| e.roulette }.uniq
+    roulettes.delete(Roulette.find_by_name('No Roulette'))
+
+    @roulette_names = roulettes.map(&:name)
+    @instance_groups = [ ]
+    levels.each do |level|
+      level_group = { level: level }
+      roulettes.each do |roulette|
+        raw = InstanceEntry.where(start_level: level, roulette: roulette).map(&:roulette_bonus)
+        level_group[roulette.name] = { raw: raw, average: raw.sum / raw.count }
+      end
+      @instance_groups << level_group
+    end
   end
 end
