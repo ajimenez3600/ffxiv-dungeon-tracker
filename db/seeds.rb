@@ -22,5 +22,6 @@ Roulette.create([
   { name: 'MSQ' },
   { name: 'Guildhest' },
   { name: 'Level 80' },
-  { name: 'Expert' }
+  { name: 'Expert' },
+  { name: 'No Roulette' }
 ])

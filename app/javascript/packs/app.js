@@ -20,29 +20,32 @@ Vue.use(IconsPlugin)
 
 document.addEventListener('DOMContentLoaded', () => {
   var element = document.getElementById('dungeon-form')
-  if (typeof(element) != 'undefined') {
+  if (element !== null) {
+    console.log(element)
     const app = new Vue({
       el: element,
       data: {
         jobs: JSON.parse(element.dataset.jobs),
         instances: JSON.parse(element.dataset.instances),
         roulettes: JSON.parse(element.dataset.roulettes),
-      }
+      },
     })
   }
 
   element = document.getElementById('roulette-metrics')
-  if (typeof(element) != 'undefined') {
+  if (element !== null) {
+    console.log(element)
     const app = new Vue({
       el: element,
       data: {
-        entries: JSON.parse(element.data.entries),
-      }
+        entries: JSON.parse(element.dataset.entries),
+        roulettes: JSON.parse(element.dataset.roulettes)
+      },
     })
   }
 
   element = document.getElementById('instance-type-metrics')
-  if (typeof(element) != 'undefined') {
+  if (element !== null) {
     const app = new Vue({
       el: element,
       data: {
@@ -51,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   element = document.getElementById('roulette-xp-calculator')
-  if (typeof(element) != 'undefined') {
+  if (element !== null) {
     const app = new Vue({
       el: element,
       data: {

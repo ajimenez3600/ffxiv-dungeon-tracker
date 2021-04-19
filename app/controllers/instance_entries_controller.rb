@@ -15,10 +15,10 @@ class InstanceEntriesController < ApplicationController
 
     respond_to do |format|
       if @instance_entry.save
-        format.html { render :new, notice: "Instance was successfully created." }
+        format.html { render :root, notice: "Instance was successfully created." }
         format.json { render json: {}, status: :created }
       else
-        format.html { render :new, status: :unprocessable_entity }
+        format.html { render :root, status: :unprocessable_entity }
         format.json { render json: @instance_entry.errors, status: :unprocessable_entity }
       end
     end
@@ -26,40 +26,40 @@ class InstanceEntriesController < ApplicationController
 
   private
 
-    # Only allow a list of trusted parameters through.
-    def instance_entry_params
-      params.permit(
-        :start_time,
-        :start_level,
-        :start_xp,
-        :queue_pop_time,
-        :finish_time,
-        :finish_level,
-        :finish_xp,
-        :xp_bonus,
-        :roulette_bonus,
-        :new_player_bonus,
-        :role_in_need_bonus,
-        :other_bonus,
-        :commends,
-        :queue_outlier,
-        :duration_outlier,
-        :xp_outlier,
-        :notes
-      )
-    end
+  # Only allow a list of trusted parameters through.
+  def instance_entry_params
+    params.permit(
+      :start_time,
+      :start_level,
+      :start_xp,
+      :queue_pop_time,
+      :finish_time,
+      :finish_level,
+      :finish_xp,
+      :xp_bonus,
+      :roulette_bonus,
+      :new_player_bonus,
+      :role_in_need_bonus,
+      :other_bonus,
+      :commends,
+      :queue_outlier,
+      :duration_outlier,
+      :xp_outlier,
+      :notes
+    )
+  end
 
-    def get_instance_groups
-      groups = Instance.all.group_by(&:instance_type)
-      groups = groups.map do |group|
-        { instance_type: group.first, count: groups[group.first].count }
-      end
-      Instance.all.group_by do |instance|
-        if groups.select { |g| g[:instance_type] == instance.instance_type }.first[:count] < 20 then
-          "#{instance.instance_type}"
-        else
-          "#{instance.instance_type} (#{instance.expansion})"
-        end
+  def get_instance_groups
+    groups = Instance.all.group_by(&:instance_type)
+    groups = groups.map do |group|
+      { instance_type: group.first, count: groups[group.first].count }
+    end
+    Instance.all.group_by do |instance|
+      if groups.select { |g| g[:instance_type] == instance.instance_type }.first[:count] < 20 then
+        "#{instance.instance_type}"
+      else
+        "#{instance.instance_type} (#{instance.expansion})"
       end
     end
+  end
 end
