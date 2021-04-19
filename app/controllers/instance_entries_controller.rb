@@ -15,10 +15,10 @@ class InstanceEntriesController < ApplicationController
 
     respond_to do |format|
       if @instance_entry.save
-        format.html { render :root, notice: "Instance was successfully created." }
+        format.html { redirect_to root_path, notice: "Instance was successfully created." }
         format.json { render json: {}, status: :created }
       else
-        format.html { render :root, status: :unprocessable_entity }
+        format.html { redirect_to root_path, status: :unprocessable_entity }
         format.json { render json: @instance_entry.errors, status: :unprocessable_entity }
       end
     end
