@@ -10,7 +10,9 @@ class Metrics::RoulettesController < ApplicationController
       level_group = { level: level }
       roulettes.each do |roulette|
         raw = InstanceEntry.where(start_level: level, roulette: roulette).map(&:roulette_bonus)
-        level_group[roulette.name] = { raw: raw, average: raw.sum / raw.count }
+        average = 0
+        average = raw.sum / raw.count if raw.count > 0
+        level_group[roulette.name] = { raw: raw, average: average }
       end
       @instance_groups << level_group
     end
