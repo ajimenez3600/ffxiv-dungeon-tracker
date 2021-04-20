@@ -1,6 +1,6 @@
 import Vue from 'vue/dist/vue.esm'
 
-import Chart from 'chart.js/auto';
+import Chart, { registerables } from 'chart.js/auto';
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
@@ -40,13 +40,52 @@ document.addEventListener('DOMContentLoaded', () => {
 
   var rouletteMetrics = document.getElementById('roulette-metrics')
   if (rouletteMetrics !== null) {
+    const entries = JSON.parse(rouletteMetrics.dataset.entries);
     const rouletteMetricsApp = new Vue({
       el: rouletteMetrics,
       data: {
-        entries: JSON.parse(rouletteMetrics.dataset.entries),
+        entries: entries,
         columns: JSON.parse(rouletteMetrics.dataset.columns)
       },
     })
+
+    var data = { }
+    Object.keys(entries).forEach((level) => {
+      var number = entries[level]['level']
+      var roulettes = Object.keys(entries[level]).slice(1)
+      roulettes.forEach((roulette) => {
+        if (!data.hasOwnProperty(roulette)) {
+          data[roulette] = [ ]
+        }
+        entries[level][roulette]['raw'].forEach((entry) => {
+          data[roulette].push({ x:number, y:entry })
+        })
+      })
+    })
+
+    var set = Object.keys(data).map((k) => {
+      return ({
+        label: k,
+        data: data[k],
+        borderColor: 'rgba(255,0,0,255',
+        backgroundColor: 'rgba(255,0,0,100)'
+      })
+    });
+
+    var ctx = document.getElementById('scatterplot');
+    var scatterplot = new Chart(ctx, {
+      type: 'scatter',
+      data: {
+        datasets: set,
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
   }
 
   var instanceMetrics = document.getElementById('instance-type-metrics')
