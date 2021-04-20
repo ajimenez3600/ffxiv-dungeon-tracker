@@ -4,8 +4,8 @@ class Metrics::RoulettesController < ApplicationController
     roulettes = InstanceEntry.all.map{ |e| e.roulette }.uniq
     roulettes.delete(Roulette.find_by_name('No Roulette'))
 
-    @columns = roulettes.map{|r| { key: r.name, sortable: true } }
-    @columns << { key: 'level', sortable: true }
+    @columns = [{ key: 'level', sortable: true }]
+    @columns += roulettes.map{|r| { key: r.name, sortable: true } }
 
     @instance_groups = [ ]
     levels.each do |level|
