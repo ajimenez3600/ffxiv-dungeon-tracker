@@ -15,6 +15,7 @@ class Metrics::RoulettesController < ApplicationController
         level_group[roulette.name] = { raw: raw, average: average }
       end
       @instance_groups << level_group
+      @instance_groups.sort_by { |g| g[:level] }
     end
   end
 end
