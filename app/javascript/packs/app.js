@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
       el: rouletteMetrics,
       data: {
         entries: JSON.parse(rouletteMetrics.dataset.entries),
-        roulettes: JSON.parse(rouletteMetrics.dataset.roulettes)
+        columns: JSON.parse(rouletteMetrics.dataset.columns)
       },
     })
   }
