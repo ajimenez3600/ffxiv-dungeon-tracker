@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
       },
     })
 
-    colors = [
+    var colors = [
       { border: 'rgba(255,0,0,255)',    background: 'rgba(255,0,0,100)' },     // red
       { border: 'rgba(255,51,0,255)',   background: 'rgba(255,51,0,100)' },    // orange
       { border: 'rgba(255,204,0,255)',  background: 'rgba(255,204,0,100)' },   // yellow
