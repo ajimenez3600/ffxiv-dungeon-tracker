@@ -50,14 +50,14 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     var colors = [
-      { border: 'rgba(255,0,0,255)',    background: 'rgba(255,0,0,100)' },     // red
-      { border: 'rgba(255,51,0,255)',   background: 'rgba(255,51,0,100)' },    // orange
-      { border: 'rgba(255,204,0,255)',  background: 'rgba(255,204,0,100)' },   // yellow
-      { border: 'rgba(51,153,0,255)',   background: 'rgba(51,153,0,100)' },    // green
-      { border: 'rgba(51,102,255,255)', background: 'rgba(51,102,255,100)' },  // blue
-      { border: 'rgba(51,51,255,255)',  background: 'rgba(51,51,255,100)' },   // indigo
-      { border: 'rgba(102,51,255,255)', background: 'rgba(102,51,255,100)' },  // purple
-      { border: 'rgba(204,153,51,255)', background: 'rgba(204,153,51,100)' },  // brown
+      { border: 'rgba(255,0,0,255)',      background: 'rgba(255,0,0,100)' },     // red
+      { border: 'rgba(255,102,255,255)',  background: 'rgba(255,102,255,100)' }, // pink
+      { border: 'rgba(255,204,0,255)',    background: 'rgba(255,204,0,100)' },   // yellow
+      { border: 'rgba(51,153,0,255)',     background: 'rgba(51,153,0,100)' },    // green
+      { border: 'rgba(51,102,255,255)',   background: 'rgba(51,102,255,100)' },  // blue
+      { border: 'rgba(51,51,255,255)',    background: 'rgba(51,51,255,100)' },   // indigo
+      { border: 'rgba(102,51,255,255)',   background: 'rgba(102,51,255,100)' },  // purple
+      { border: 'rgba(204,153,51,255)',   background: 'rgba(204,153,51,100)' },  // brown
     ]
 
     var data = { }
