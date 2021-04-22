@@ -51,18 +51,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   var rouletteMetrics = document.getElementById('roulette-metrics')
   if (rouletteMetrics !== null) {
+    var chart_entries = JSON.parse(rouletteMetrics.dataset.chartEntries)
     const rouletteMetricsApp = new Vue({
       el: rouletteMetrics,
       data: {
-        table_entries: JSON.parse(rouletteMetrics.dataset.table_entries),
-        chart_entries: JSON.parse(rouletteMetrics.dataset.chart_entries),
+        table_entries: JSON.parse(rouletteMetrics.dataset.tableEntries),
+        chart_entries: chart_entries,
         columns: JSON.parse(rouletteMetrics.dataset.columns)
       },
     })
 
-    var ctx = document.getElementById('scatterplot');
-    var scatterplot = new Chart(ctx, {
-      type: 'scatter',
+    var ctx = document.getElementById('bubbleplot');
+    var bubbleplot = new Chart(ctx, {
+      type: 'bubble',
       data: {
         datasets: Object.keys(chart_entries).map((k, i) => {
           return ({
@@ -75,12 +76,8 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       options: {
         scales: {
-          x: {
-            title: 'Level',
-          },
           y: {
             beginAtZero: true,
-            title: 'Roulette Bonus',
           }
         }
       }
