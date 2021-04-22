@@ -2,12 +2,12 @@
   <%= content_tag :div,
     id: 'roulette-metrics',
     style: 'width: 100%',
-    data: { entries: @instance_groups.to_json, columns: @columns.to_json } do %>
+    data: { table_entries: @table_data.to_json, chart_entries: @chart_data.to_json, columns: @columns.to_json } do %>
     <b-container>
       <canvas id='scatterplot' width='400' height='400'></canvas>
       <b-row>
         <b-col>
-          <b-table :fields=columns :items=entries>
+          <b-table :fields=columns :items=table_entries>
             <template #cell(level)="data">
               {{ data.value }}
             </template>

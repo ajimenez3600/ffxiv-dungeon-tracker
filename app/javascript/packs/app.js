@@ -19,6 +19,17 @@ Vue.use(IconsPlugin)
 // </div>
 
 document.addEventListener('DOMContentLoaded', () => {
+  var colors = [
+    { border: 'rgba(255,0,0,255)',      background: 'rgba(255,0,0,100)' },     // red
+    { border: 'rgba(255,102,255,255)',  background: 'rgba(255,102,255,100)' }, // pink
+    { border: 'rgba(255,204,0,255)',    background: 'rgba(255,204,0,100)' },   // yellow
+    { border: 'rgba(51,153,0,255)',     background: 'rgba(51,153,0,100)' },    // green
+    { border: 'rgba(51,102,255,255)',   background: 'rgba(51,102,255,100)' },  // blue
+    { border: 'rgba(51,51,255,255)',    background: 'rgba(51,51,255,100)' },   // indigo
+    { border: 'rgba(102,51,255,255)',   background: 'rgba(102,51,255,100)' },  // purple
+    { border: 'rgba(204,153,51,255)',   background: 'rgba(204,153,51,100)' },  // brown
+  ]
+
   var navbar = document.getElementById('top-navbar')
   if (navbar !== null) {
     const navbarApp = new Vue({
@@ -40,59 +51,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
   var rouletteMetrics = document.getElementById('roulette-metrics')
   if (rouletteMetrics !== null) {
-    const entries = JSON.parse(rouletteMetrics.dataset.entries);
     const rouletteMetricsApp = new Vue({
       el: rouletteMetrics,
       data: {
-        entries: entries,
+        table_entries: JSON.parse(rouletteMetrics.dataset.table_entries),
+        chart_entries: JSON.parse(rouletteMetrics.dataset.chart_entries),
         columns: JSON.parse(rouletteMetrics.dataset.columns)
       },
     })
-
-    var colors = [
-      { border: 'rgba(255,0,0,255)',      background: 'rgba(255,0,0,100)' },     // red
-      { border: 'rgba(255,102,255,255)',  background: 'rgba(255,102,255,100)' }, // pink
-      { border: 'rgba(255,204,0,255)',    background: 'rgba(255,204,0,100)' },   // yellow
-      { border: 'rgba(51,153,0,255)',     background: 'rgba(51,153,0,100)' },    // green
-      { border: 'rgba(51,102,255,255)',   background: 'rgba(51,102,255,100)' },  // blue
-      { border: 'rgba(51,51,255,255)',    background: 'rgba(51,51,255,100)' },   // indigo
-      { border: 'rgba(102,51,255,255)',   background: 'rgba(102,51,255,100)' },  // purple
-      { border: 'rgba(204,153,51,255)',   background: 'rgba(204,153,51,100)' },  // brown
-    ]
-
-    var data = { }
-    Object.keys(entries).forEach((level) => {
-      var number = entries[level]['level']
-      var roulettes = Object.keys(entries[level]).slice(1)
-      roulettes.forEach((roulette) => {
-        if (!data.hasOwnProperty(roulette)) {
-          data[roulette] = [ ]
-        }
-        entries[level][roulette]['raw'].forEach((entry) => {
-          data[roulette].push({ x:number, y:entry })
-        })
-      })
-    })
-
-    var set = Object.keys(data).map((k, i) => {
-      return ({
-        label: k,
-        data: data[k],
-        borderColor: colors[i]['border'],
-        backgroundColor: colors[i]['background']
-      })
-    });
 
     var ctx = document.getElementById('scatterplot');
     var scatterplot = new Chart(ctx, {
       type: 'scatter',
       data: {
-        datasets: set,
+        datasets: Object.keys(chart_entries).map((k, i) => {
+          return ({
+            label: k,
+            data: chart_entries[k],
+            borderColor: colors[i]['border'],
+            backgroundColor: colors[i]['background']
+          })
+        }),
       },
       options: {
         scales: {
+          x: {
+            title: 'Level',
+          },
           y: {
-            beginAtZero: true
+            beginAtZero: true,
+            title: 'Roulette Bonus',
           }
         }
       }
