@@ -43,12 +43,12 @@
         <div class='accordion' role=tablist>
           <b-card no-body class='mb-1' v-for="key in Object.keys(instances)" :key="key">
             <b-card-header header-tag='header' class='p-1' role='tab'>
-              <b-button v-if="instances[key] instanceof Array" block variant=info @click="() => $root.$emit('bv::toggle::collapse', key)">{{key}}</b-button>
+              <b-button v-if="instances[key] instanceof Array" block @click="() => $root.$emit('bv::toggle::collapse', key)">{{key}}</b-button>
               <div v-else>
                 <h5 style='text-align: center;'>{{key}}</h5>
                   <b-button-group style='width: 100%;'>
                     <b-button
-                      variant=info class='mx-1'
+                      class='mx-1'
                       v-for="key2 in Object.keys(instances[key])" :key="key2" 
                       @click="() => $root.$emit('bv::toggle::collapse', key + ' ' + key2)"
                     >
@@ -141,7 +141,7 @@
         </div>
       </section>
 
-      <b-button class="mt-2" type=submit>Submit</b-button>
+      <b-button class="mt-2 bg-purple" type=submit>Submit</b-button>
     <% end %>
   <% end %>
 </div>
