@@ -10,30 +10,39 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_18_044748) do
+ActiveRecord::Schema.define(version: 2021_04_24_071300) do
 
-  create_table "instance_entries", force: :cascade do |t|
+  create_table "expansions", force: :cascade do |t|
+    t.string "name"
+    t.integer "api_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.datetime "start_time"
+  end
+
+  create_table "instance_entries", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "instance_id"
+    t.string "instance_name"
+    t.integer "job_id"
+    t.string "job_name"
     t.integer "start_level"
     t.integer "start_xp"
-    t.datetime "queue_pop_time"
-    t.datetime "finish_time"
     t.integer "finish_level"
     t.integer "finish_xp"
-    t.integer "xp_bonus"
     t.integer "roulette_bonus"
-    t.integer "new_player_bonus"
     t.integer "role_in_need_bonus"
+    t.integer "new_player_bonus"
     t.integer "other_bonus"
+    t.integer "xp_bonus"
+    t.boolean "xp_outlier"
+    t.datetime "start_time"
+    t.datetime "queue_pop_time"
+    t.boolean "queue_outlier"
+    t.datetime "finish_time"
+    t.boolean "duration_outlier"
     t.integer "commends"
     t.string "notes"
-    t.integer "instance_id"
-    t.integer "job_id"
-    t.boolean "queue_outlier"
-    t.boolean "duration_outlier"
-    t.boolean "xp_outlier"
     t.integer "roulette_id"
   end
 
@@ -66,6 +75,7 @@ ActiveRecord::Schema.define(version: 2021_04_18_044748) do
     t.boolean "mentor_roulette"
     t.boolean "normal_raid_roulette"
     t.boolean "trial_roulette"
+    t.integer "expansion_id"
   end
 
   create_table "jobs", force: :cascade do |t|

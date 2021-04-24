@@ -8,16 +8,6 @@ import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 
-// To be able to target elements in your existing html/erb templates,
-// comment out the above code and uncomment the below
-// Add <%= javascript_pack_tag 'hello_vue' %> to your layout
-// Then add this markup to your html template:
-//
-// <div id='hello'>
-//   {{message}}
-//   <app></app>
-// </div>
-
 document.addEventListener('DOMContentLoaded', () => {
   var colors = [
     { border: 'rgba(255,0,0,255)',      background: 'rgba(255,0,0,100)' },     // red
@@ -32,14 +22,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   var navbar = document.getElementById('top-navbar')
   if (navbar !== null) {
-    const navbarApp = new Vue({
+    new Vue({
       el: navbar,
     })
   }
 
   var dungeonForm = document.getElementById('dungeon-form')
   if (dungeonForm !== null) {
-    const dungoenFormApp = new Vue({
+    new Vue({
       el: dungeonForm,
       data: {
         jobs: JSON.parse(dungeonForm.dataset.jobs),
@@ -52,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
   var rouletteMetrics = document.getElementById('roulette-metrics')
   if (rouletteMetrics !== null) {
     var chart_entries = JSON.parse(rouletteMetrics.dataset.chartEntries)
-    const rouletteMetricsApp = new Vue({
+    new Vue({
       el: rouletteMetrics,
       data: {
         table_entries: JSON.parse(rouletteMetrics.dataset.tableEntries),
@@ -62,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     var ctx = document.getElementById('bubbleplot');
-    var bubbleplot = new Chart(ctx, {
+    new Chart(ctx, {
       type: 'bubble',
       data: {
         datasets: Object.keys(chart_entries).map((k, i) => {
@@ -86,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   var instanceMetrics = document.getElementById('instance-type-metrics')
   if (instanceMetrics !== null) {
-    const instanceMetricsApp = new Vue({
+    new Vue({
       el: instanceMetrics,
       data: {
       }
@@ -95,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   var xpCalculator = document.getElementById('roulette-xp-calculator')
   if (xpCalculator !== null) {
-    const xpCalculatorApp = new Vue({
+    new Vue({
       el: xpCalculator,
       data: {
       }

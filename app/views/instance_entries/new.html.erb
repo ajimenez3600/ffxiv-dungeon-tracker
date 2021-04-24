@@ -10,7 +10,7 @@
         </div>
         <div class="form-row">
           <label for="start_time">Start Time</label>
-          <input id="start_time" name='start_time' type="datetime-local" class="form-control" />
+          <input required id="start_time" name='start_time' type="datetime-local" class="form-control" />
         </div>
         <div class="form-row">
           <label for="roulette_name">Roulette Name</label>
@@ -18,21 +18,21 @@
         </div>
         <div class="form-row">
           <label for="job_name">Job Name</label>
-          <b-form-select id="job_name" name='job_name' :options="jobs" />
+          <b-form-select required id="job_name" name='job_name' :options="jobs" />
         </div>
         <div class="form-row">
           <div class="col-6">
             <label for="start_level">Starting Level</label>
-            <input id="start_level" name='start_level' type="number" class="form-control" />
+            <input required id="start_level" name='start_level' type="number" class="form-control" />
           </div>
           <div class="col-6">
             <label for="start_xp">Starting XP</label>
-            <input id="start_xp" name='start_xp' type="number" class="form-control">
+            <input required id="start_xp" name='start_xp' type="number" class="form-control">
           </div>
         </div>
         <div class="form-row">
           <label for="queue_pop_time">Queue Pop Time</label>
-          <input id="queue_pop_time" name='queue_pop_time' type="datetime-local" class="form-control" />
+          <input required id="queue_pop_time" name='queue_pop_time' type="datetime-local" class="form-control" />
         </div>
       </section>
 
@@ -43,11 +43,21 @@
         <div class='accordion' role=tablist>
           <b-card no-body class='mb-1' v-for="key in Object.keys(instances)" :key="key">
             <b-card-header header-tag='header' class='p-1' role='tab'>
-              <b-button block :style="key.color" @click="() => $root.$emit('bv::toggle::collapse', key)" variant='info'>{{key}}</b-button>
+              <b-button v-if="instances[key] instanceof Array" block variant=info @click="() => $root.$emit('bv::toggle::collapse', key)">{{key}}</b-button>
+              <div v-else v-for="key2 in Object.keys(instances[key]" :key="key2">
+                <span>
+                  <b-button block variant=info @click="() => $root.$emit('bv::toggle::collapse', key + ' ' + key2)">
+                </span>
+              </div>
             </b-card-header>
-            <b-collapse :id='key' accordion='instances-accordion' role='tabpanel'>
+            <b-collapse v-if="instances[key] instanceof Array" :id='key' accordion='instances-accordion' role='tabpanel'>
               <b-card-body>
                 <b-form-radio-group name='instance_selection' :options='instances[key].map((v)=>v.name)' stacked size='sm' />
+              </b-card-body>
+            </b-collapse>
+            <b-collapse v-else v-for="key2 in Object.keys(instances[key]" :key="key2" :id="key + ' ' + key2" accordion='instances-accordion' role='tabpanel'>
+              <b-card-body>
+                <b-form-radio-group name='instance_selection' :options='instances[key][key2].map((v)=>v.name)' stacked size='sm' />
               </b-card-body>
             </b-collapse>
           </b-card>
@@ -59,16 +69,16 @@
           <h3>Post-Instance</h3>
         </div>
         <div class="form-row">
-          <label for="finish_time">Finish Time</label>
+          <label required for="finish_time">Finish Time</label>
           <input id="finish_time" name='finish_time' type="datetime-local" class="form-control" />
         </div>
         <div class="form-row">
           <div class="col-6">
-            <label for="finish_level">Finish Level</label>
+            <label required for="finish_level">Finish Level</label>
             <input id="finish_level" name='finish_level' type="number" class="form-control" />
           </div>
           <div class="col-6">
-            <label for="finish_xp">Finish XP</label>
+            <label required for="finish_xp">Finish XP</label>
             <input id="finish_xp" name='finish_xp' type="number" class="form-control">
           </div>
         </div>
