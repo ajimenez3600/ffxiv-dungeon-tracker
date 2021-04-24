@@ -2,7 +2,7 @@
   <%= content_tag :div,
     id: 'dungeon-form',
     style: 'width: 100%;',
-    data: { jobs: @jobs, instances: @instances, roulettes: @roulettes } do %>
+    data: { jobs: @jobs, instances: @instances.to_json, roulettes: @roulettes.to_json } do %>
     <%= form_tag :action => 'create', id: @instance_entry do %>
       <section id="pre-instance">
         <div class="form-row">
@@ -44,20 +44,27 @@
           <b-card no-body class='mb-1' v-for="key in Object.keys(instances)" :key="key">
             <b-card-header header-tag='header' class='p-1' role='tab'>
               <b-button v-if="instances[key] instanceof Array" block variant=info @click="() => $root.$emit('bv::toggle::collapse', key)">{{key}}</b-button>
-              <div v-else v-for="key2 in Object.keys(instances[key]" :key="key2">
-                <span>
-                  <b-button block variant=info @click="() => $root.$emit('bv::toggle::collapse', key + ' ' + key2)">
-                </span>
+              <div v-else>
+                <h5 style='text-align: center;'>{{key}}</h5>
+                  <b-button-group style='width: 100%;'>
+                    <b-button
+                      variant=info class='mx-1'
+                      v-for="key2 in Object.keys(instances[key])" :key="key2" 
+                      @click="() => $root.$emit('bv::toggle::collapse', key + ' ' + key2)"
+                    >
+                      {{key2}}
+                    </b-button>
+                  </b-button-group>
               </div>
             </b-card-header>
             <b-collapse v-if="instances[key] instanceof Array" :id='key' accordion='instances-accordion' role='tabpanel'>
               <b-card-body>
-                <b-form-radio-group name='instance_selection' :options='instances[key].map((v)=>v.name)' stacked size='sm' />
+                <b-form-radio-group name='instance_selection' :options='instances[key]' stacked size='sm' />
               </b-card-body>
             </b-collapse>
-            <b-collapse v-else v-for="key2 in Object.keys(instances[key]" :key="key2" :id="key + ' ' + key2" accordion='instances-accordion' role='tabpanel'>
+            <b-collapse v-else v-for="key2 in Object.keys(instances[key])" :key="key2" :id="key + ' ' + key2" accordion='instances-accordion' role='tabpanel'>
               <b-card-body>
-                <b-form-radio-group name='instance_selection' :options='instances[key][key2].map((v)=>v.name)' stacked size='sm' />
+                <b-form-radio-group name='instance_selection' :options='instances[key][key2]' stacked size='sm' />
               </b-card-body>
             </b-collapse>
           </b-card>

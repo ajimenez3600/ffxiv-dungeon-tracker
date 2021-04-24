@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
       data: {
         jobs: JSON.parse(dungeonForm.dataset.jobs),
         instances: JSON.parse(dungeonForm.dataset.instances),
-        roulettes: JSON.parse(dungeonForm.dataset.roulettes),
+        roulettes: JSON.parse(dungeonForm.dataset.roulettes)
       },
     })
   }
