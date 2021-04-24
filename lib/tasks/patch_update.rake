@@ -1,9 +1,39 @@
 namespace :patch_update do
   desc "Fetches all data from xivapi"
   task fetch_xivapi_data: :environment do
+    Rake::Task['patch_update:fetch_expansions'].invoke
     Rake::Task['patch_update:fetch_instances'].invoke
     Rake::Task['patch_update:fetch_jobs'].invoke
     Rake::Task['patch_update:fetch_xp_table'].invoke
+  end
+
+  desc "Fetches Expansion listing from xivapi"
+  task fetch_expansions: :environment do
+    response = HTTParty.get('https://xivapi.com/exversion?limit=1000&columns=ID,Name')
+    if response.code != 200 then
+      puts response.code
+      next
+    end
+
+    fetched_expansions = JSON.parse(response.body)['Results']
+    puts "fetched #{fetched_expansions.count} expansions"
+
+    fetched_expansions.each do |fetched_expansion|
+      expansion = Expansion.find_by_name(fetched_expansion['Name'])
+      if expansion.nil? then
+        puts fetched_expansion['Name']
+        expansion = Expansion.new({ name: fetched_expansion['Name'] })
+      end
+
+      expansion.api_id = fetched_expansion['ID']
+      if expansion.changed? then
+        if expansion.valid? then
+          expansion.save
+        else
+          puts expansion.errors
+        end
+      end
+    end
   end
 
   desc "Fetches Instance listing from xivapi"
@@ -18,6 +48,10 @@ namespace :patch_update do
 
     fetched_instances = JSON.parse(response.body)['Results']
     puts "fetched #{fetched_instances.count} instances"
+
+    instance_names = fetched_instances.map { |i| i['ContentType']['Name'] }
+    Instance.all.each { |i| i.delete unless instance_names.include?(i.name) }
+
     fetched_instances.each do |fetched_instance|
       # drop some of the instance types from getting into the database
       next if fetched_instance['ContentType']['Name'].blank?
@@ -35,7 +69,7 @@ namespace :patch_update do
       instance.required_item_level = fetched_instance['ContentFinderCondition']['ItemLevelRequired']
       instance.level_sync = fetched_instance['ContentFinderCondition']['ClassJobLevelSync']
       instance.item_level_sync = fetched_instance['ContentFinderCondition']['ItemLevelSync']
-      instance.expansion = fetched_instance['ContentFinderCondition']['TerritoryType']['ExVersion']['Name']
+      instance.expansion = Expansion.find_by_name(fetched_instance['ContentFinderCondition']['TerritoryType']['ExVersion']['Name'])
 
       instance.alliance_roulette = fetched_instance['ContentFinderCondition']['AllianceRoulette']
       instance.expert_roulette = fetched_instance['ContentFinderCondition']['ExpertRoulette']
@@ -78,6 +112,9 @@ namespace :patch_update do
 
     fetched_jobs = JSON.parse(response.body)['Results']
     puts "fetched #{fetched_jobs.count} jobs"
+
+    job_names = fetched_jobs.map { |job| job['NameEnglish_en'] }
+    Job.all.each { |job| job.delete unless job_names.include?(job.name) }
     
     fetched_jobs.each do |fetched_job|
       next unless fetched_job['CanQueueForDuty'] == 1
