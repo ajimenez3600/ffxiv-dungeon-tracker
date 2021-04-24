@@ -15,7 +15,7 @@
 
   <body class="mx-0 my-0">
     <div id='top-navbar' class="mb-2">
-      <b-navbar toggleable="lg" type="light" variant="info">
+      <b-navbar toggleable="lg" type="dark" class="bg-purple">
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
         <b-collapse id="nav-collapse" is-nav>
@@ -26,14 +26,20 @@
 
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto">
-            <b-nav-item href="#">Discord</b-nav-item>
+            <b-nav-item href="https://discord.com/users/158341423693955072">Discord</b-nav-item>
             <b-nav-item href="#">Github</b-nav-item>
-            <b-nav-item href="#">Ko-fi</b-nav-item>
           </b-navbar-nav>
         </b-collapse>
       </b-navbar>
     </div>
 
     <%= yield %>
+    <div style='text-align: right; padding-right: 2em; padding-bottom: 2em;'>
+      <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
+      <script type='text/javascript'>
+        kofiwidget2.init('Buy me a coffee', '#794bc4', 'D1D64ER9L');
+        kofiwidget2.draw();
+      </script> 
+    </div>
   </body>
 </html>

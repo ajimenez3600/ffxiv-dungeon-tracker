@@ -11,7 +11,7 @@ class Metrics::RoulettesController < ApplicationController
     levels.each do |level|
       level_group = { level: level }
       roulettes.each do |roulette|
-        raw = InstanceEntry.where(start_level: level, roulette: roulette).map(&:roulette_bonus)
+        raw = InstanceEntry.where(start_level: level, roulette: roulette, xp_outlier: false).map(&:roulette_bonus)
         average = 0
         average = raw.sum / raw.count if raw.count > 0
         level_group[roulette.name] = { raw: raw, average: average }
@@ -22,7 +22,7 @@ class Metrics::RoulettesController < ApplicationController
     @chart_data = { }
     roulettes.each do |roulette|
       roulette_group = [ ]
-      by_level = InstanceEntry.where(roulette: roulette).group_by { |e| e[:start_level] }
+      by_level = InstanceEntry.where(roulette: roulette, xp_outlier: false).group_by { |e| e[:start_level] }
       by_level.keys.each do |level|
         by_xp = by_level[level].group_by { |e| e[:roulette_bonus] }
         by_xp.map do |group|
