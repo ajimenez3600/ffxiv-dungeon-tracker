@@ -50,10 +50,21 @@ class InstanceEntriesController < ApplicationController
   end
 
   def get_instance_groups
-    Instance.all.group_by(&:instance_type).each do |g|
-      g.second = g.second.count > 20
-        ? g.second.group_by { |i| i.expansion.api_id }.each { |g2| g2.first = Expansion.find_by_api_id(g2.first).name }
-        : g
+    group = { }
+    Instance.all.map(&:instance_type).uniq.each do |instance_type|
+      instances = Instance.where(instance_type: instance_type).all
+      if instances.count > 20 then
+        expansion_group = { }
+        Expansion.all.sort_by(&:api_id).each do |expansion|
+          instances = Instance.where(instance_type: instance_type, expansion: expansion)
+          next unless instances.count > 0
+          expansion_group[expansion.name] = instances.map(&:name)
+        end
+        group[instance_type] = expansion_group
+      else
+        group[instance_type] = instances.map(&:name)
+      end
     end
+    group
   end
 end
