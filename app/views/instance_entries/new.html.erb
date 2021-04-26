@@ -59,12 +59,12 @@
             </b-card-header>
             <b-collapse v-if="instances[key] instanceof Array" :id='key' accordion='instances-accordion' role='tabpanel'>
               <b-card-body>
-                <b-form-radio-group name='instance_selection' :options='instances[key]' stacked size='sm' />
+                <b-form-radio-group required name='instance_selection' :options='instances[key]' stacked size='sm' />
               </b-card-body>
             </b-collapse>
             <b-collapse v-else v-for="key2 in Object.keys(instances[key])" :key="key2" :id="key + ' ' + key2" accordion='instances-accordion' role='tabpanel'>
               <b-card-body>
-                <b-form-radio-group name='instance_selection' :options='instances[key][key2]' stacked size='sm' />
+                <b-form-radio-group required name='instance_selection' :options='instances[key][key2]' stacked size='sm' />
               </b-card-body>
             </b-collapse>
           </b-card>
@@ -76,17 +76,17 @@
           <h3>Post-Instance</h3>
         </div>
         <div class="form-row">
-          <label required for="finish_time">Finish Time</label>
-          <input id="finish_time" name='finish_time' type="datetime-local" class="form-control" />
+          <label for="finish_time">Finish Time</label>
+          <input required id="finish_time" name='finish_time' type="datetime-local" class="form-control" />
         </div>
         <div class="form-row">
           <div class="col-6">
-            <label required for="finish_level">Finish Level</label>
-            <input id="finish_level" name='finish_level' type="number" class="form-control" />
+            <label for="finish_level">Finish Level</label>
+            <input required id="finish_level" name='finish_level' type="number" class="form-control" />
           </div>
           <div class="col-6">
-            <label required for="finish_xp">Finish XP</label>
-            <input id="finish_xp" name='finish_xp' type="number" class="form-control">
+            <label for="finish_xp">Finish XP</label>
+            <input required id="finish_xp" name='finish_xp' type="number" class="form-control">
           </div>
         </div>
         <div class="form-row">
@@ -141,7 +141,7 @@
         </div>
       </section>
 
-      <b-button class="mt-2 bg-purple" type=submit>Submit</b-button>
+      <b-button class="mt-2" variant=info type=submit>Submit</b-button>
     <% end %>
   <% end %>
 </div>
