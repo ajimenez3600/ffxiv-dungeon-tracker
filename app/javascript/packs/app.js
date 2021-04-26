@@ -22,9 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   var navbar = document.getElementById('top-navbar')
   if (navbar !== null) {
-    new Vue({
-      el: navbar,
-    })
+    new Vue({ el: navbar })
   }
 
   var dungeonForm = document.getElementById('dungeon-form')

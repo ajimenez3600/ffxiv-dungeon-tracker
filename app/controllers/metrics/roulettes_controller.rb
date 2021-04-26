@@ -1,5 +1,5 @@
 class Metrics::RoulettesController < ApplicationController
-  def index
+  def roulette_xp
     levels = InstanceEntry.all.map(&:start_level).uniq.sort
     roulettes = InstanceEntry.all.map{ |e| e.roulette }.uniq
     roulettes.delete(Roulette.find_by_name('No Roulette'))
@@ -32,4 +32,29 @@ class Metrics::RoulettesController < ApplicationController
       @chart_data[roulette.name] = roulette_group
     end
   end
+
+  def instance_xp
+  end
+
+  def total_xp
+  end
+
+  def total_xp
+  end
+
+  def instance_time
+  end
+
+  def queue_time
+  end
+
+  def total_time
+  end
+
+  def roulette_efficiency
+  end
+
+  private
+
+  
 end
