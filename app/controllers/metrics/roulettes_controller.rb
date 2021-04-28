@@ -88,7 +88,8 @@ class Metrics::RoulettesController < ApplicationController
     #   end
     #   @chart_data[roulette.name] = roulette_group
     # end
-    @chart_data = chart_data({ xp_outlier: false }, ->(e) { e.start_level }, ->(e) { e.bonus_xp + e.combat_xp })
+
+    #@chart_data = chart_data({ xp_outlier: false }, ->(e) { e.start_level }, ->(e) { e.bonus_xp + e.combat_xp })
   end
 
   def instance_time
@@ -140,19 +141,19 @@ class Metrics::RoulettesController < ApplicationController
     table_data
   end
 
-  def chart_data(where_options, &grouper, &selector)
-    chart_data = { }
-    roulettes.each do |roulette|
-      roulette_group = [ ]
-      by_level = entries.where(where_options).group_by { |e| grouper.call(e) }
-      by_level.keys.each do |level|
-        by_xp = by_level[level].group_by{ |e| selector.call(e) }
-        by_xp.map do |group|
-          roulette_group << { x: level, y: group.first, r: group.second.count }
-        end
-      end
-      chart_data[roulette.name] = roulette_group
-    end
-    chart_data
-  end
+  # def chart_data(where_options, &grouper, &selector)
+  #   chart_data = { }
+  #   roulettes.each do |roulette|
+  #     roulette_group = [ ]
+  #     by_level = entries.where(where_options).group_by { |e| grouper.call(e) }
+  #     by_level.keys.each do |level|
+  #       by_xp = by_level[level].group_by{ |e| selector.call(e) }
+  #       by_xp.map do |group|
+  #         roulette_group << { x: level, y: group.first, r: group.second.count }
+  #       end
+  #     end
+  #     chart_data[roulette.name] = roulette_group
+  #   end
+  #   chart_data
+  # end
 end
