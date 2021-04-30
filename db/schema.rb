@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_24_071300) do
+ActiveRecord::Schema.define(version: 2021_04_27_153425) do
 
   create_table "expansions", force: :cascade do |t|
     t.string "name"
@@ -92,6 +92,7 @@ ActiveRecord::Schema.define(version: 2021_04_24_071300) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "recommended_dungeon_id"
+    t.integer "total_xp"
   end
 
   create_table "roles", force: :cascade do |t|

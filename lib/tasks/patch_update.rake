@@ -11,7 +11,7 @@ namespace :patch_update do
   task fetch_expansions: :environment do
     response = HTTParty.get('https://xivapi.com/exversion?limit=1000&columns=ID,Name')
     if response.code != 200 then
-      puts response.code
+      puts "\t" + response.code
       next
     end
 
@@ -21,7 +21,7 @@ namespace :patch_update do
     fetched_expansions.each do |fetched_expansion|
       expansion = Expansion.find_by_name(fetched_expansion['Name'])
       if expansion.nil? then
-        puts fetched_expansion['Name']
+        puts "\t" + fetched_expansion['Name']
         expansion = Expansion.new({ name: fetched_expansion['Name'] })
       end
 
@@ -30,10 +30,11 @@ namespace :patch_update do
         if expansion.valid? then
           expansion.save
         else
-          puts expansion.errors
+          puts "\t" + expansion.errors
         end
       end
     end
+    puts "\texpansions imported!"
   end
 
   desc "Fetches Instance listing from xivapi"
@@ -42,14 +43,14 @@ namespace :patch_update do
     
     response = HTTParty.get('https://xivapi.com/InstanceContent?limit=1000&columns=ID,Name,ContentType.Name,ContentFinderCondition,BossExp1,BossExp2,BossExp3,BossExp4,FinalBossExp,InstanceClearExp,NewPlayerBonusA,NewPlayerBonusB')
     if response.code != 200 then
-      puts response.code
+      puts "\t" + response.code
       next
     end
 
     fetched_instances = JSON.parse(response.body)['Results']
     puts "fetched #{fetched_instances.count} instances"
 
-    instance_names = fetched_instances.map { |i| i['ContentType']['Name'] }
+    instance_names = fetched_instances.map { |i| i['Name'] }
     Instance.all.each { |i| i.delete unless instance_names.include?(i.name) }
 
     fetched_instances.each do |fetched_instance|
@@ -59,7 +60,7 @@ namespace :patch_update do
 
       instance = Instance.find_by_name(fetched_instance['Name'])
       if instance.nil? then
-        puts fetched_instance['Name']
+        puts "\t" + fetched_instance['Name']
         instance = Instance.new({name: fetched_instance['Name']})
       end
 
@@ -95,18 +96,18 @@ namespace :patch_update do
         if instance.valid? then
           instance.save
         else
-          puts "failed to save instance #{instance.name}", instance.errors
+          puts "\t failed to save instance #{instance.name}", instance.errors
         end
       end
     end
-    puts 'instances imported!'
+    puts "\t instances imported!"
   end
 
   desc "Fetches Job listing from xivapi"
   task fetch_jobs: :environment do
     response = HTTParty.get('https://xivapi.com/classjob?limit=1000&columns=NameEnglish_en,Abbreviation,CanQueueForDuty,ClassJobCategory.Name,Role')
     if response.code != 200 then
-      puts response.code
+      puts  "\t" + response.code
       next
     end
 
@@ -132,18 +133,18 @@ namespace :patch_update do
         if job.valid? then
           job.save
         else
-          puts job.errors
+          puts  "\t" + job.errors
         end
       end
     end
-    puts 'jobs imported!'
+    puts "\t jobs imported!"
   end
 
   desc "Fetches XP Table data from xivapi"
   task fetch_xp_table: :environment do
     response = HTTParty.get('https://xivapi.com/paramgrow?limit=1000&columns=ID,ExpToNext,ProperDungeon,ItemLevelSync')
     if response.code != 200 then
-      puts response.code
+      puts  "\t" + response.code
       next
     end
 
@@ -159,6 +160,25 @@ namespace :patch_update do
       level.recommended_dungeon_id = xp_data['ProperDungeon']
       level.item_level_sync = xp_data['ItemLevelSync']
 
+      next if level.exp_to_next == 0
+
+      if level.changed? then
+        if level.valid? then
+          level.save
+        else
+          puts  "\t" + level.errors
+        end
+      end
+    end
+    puts "\t levels imported!"
+
+    levels = Level.all.sort_by(&:number)
+    levels.each_with_index do |level, ix|
+      if ix == 0 then
+        level.total_xp = 0
+      else
+        level.total_xp = levels[ix-1].total_xp + levels[ix-1].exp_to_next
+      end
       if level.changed? then
         if level.valid? then
           level.save
@@ -167,6 +187,6 @@ namespace :patch_update do
         end
       end
     end
-    puts 'levels imported!'
+    puts "\t level data calculated!"
   end
 end
