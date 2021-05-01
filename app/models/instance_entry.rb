@@ -1,7 +1,7 @@
 class InstanceEntry < ApplicationRecord
   belongs_to :instance, dependent: :destroy
   belongs_to :job
-  belongs_to :roulette
+  belongs_to :roulette, optional: true
 
   def total_xp
     Level.total_xp(finish_level, finish_xp) - Level.total_xp(start_level, start_xp)

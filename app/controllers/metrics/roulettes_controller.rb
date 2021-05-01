@@ -52,13 +52,6 @@ class Metrics::RoulettesController < ApplicationController
   def roulette_efficiency
   end
 
-  def roulette_optimizer
-  end
-
-  def roulette_calculator
-    calculate_ordering(71, 0, Roulette.all)
-  end
-
   private
 
   def levels
@@ -70,7 +63,7 @@ class Metrics::RoulettesController < ApplicationController
 
   def roulettes
     @roulettes ||= InstanceEntry.all.to_a
-      .keep_if { |e| e.roulette.name != 'No Roulette' }
+      .keep_if { |e| !e.roulette.nil? and e.roulette.name != 'No Roulette' }
       .map { |e| e.roulette }
       .uniq
   end
