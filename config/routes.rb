@@ -12,13 +12,13 @@ Rails.application.routes.draw do
         get :instance_time
       end
     end
-  end
-  resources :instance_entries, only: [:new, :create]
-  resources :roulette_calculator, only: [:new, :create]  do
-    collection do
-      get '/' => 'roulette_calculator#new'
+    resources :roulette_calculator, only: [:new, :create]  do
+      collection do
+        get '/' => 'roulette_calculator#new'
+      end
     end
   end
+  resources :instance_entries, only: [:new, :create]
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   root 'instance_entries#new'
 end
