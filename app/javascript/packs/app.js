@@ -8,6 +8,8 @@ Vue.use(IconsPlugin)
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
+import RouletteXpCalculator from './components/RouletteXpCalculator'
+
 document.addEventListener('DOMContentLoaded', () => {
   var colors = [
     { border: 'rgba(255,0,0,255)',      background: 'rgba(255,0,0,100)' },     // red
@@ -83,10 +85,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   var xpCalculator = document.getElementById('roulette-xp-calculator')
   if (xpCalculator !== null) {
+    var roulettes = JSON.parse(document.getElementById('roulette-names').dataset.roulettes)
     new Vue({
       el: xpCalculator,
+      components: { RouletteXpCalculator },
+      template: `<RouletteXpCalculator v-bind:roulettes="roulettes" />`,
       data: {
-      }
+        roulettes: roulettes,
+      },
     })
   }
 })
