@@ -21,7 +21,15 @@
         <b-collapse id="nav-collapse" is-nav>
           <b-navbar-nav>
             <b-nav-item href="/">Form</b-nav-item>
-            <b-nav-item href="/metrics/roulettes">Roulettes</b-nav-item>
+                        <b-nav-item-dropdown
+              id='roulette-dropdown'
+              text='Roulette Metrics'
+            >
+              <b-dropdown-item href="/metrics/roulettes/total_xp">Roulette Total XP</b-dropdown-item>
+              <b-dropdown-item href="/metrics/roulettes/roulette_xp">Roulette Bonus XP</b-dropdown-item>
+              <b-dropdown-item href="/metrics/roulettes/instance_xp">Roulette Instance XP</b-dropdown-item>
+              <b-dropdown-item href="/metrics/roulettes/instance_time">Roulette Instance Time</b-dropdown-item>
+            </b-nav-item-dropdown>
           </b-navbar-nav>
 
           <!-- Right aligned nav items -->
@@ -39,7 +47,7 @@
     <script style="position: fixed; bottom: 50px; right: 10px;">
       kofiWidgetOverlay.draw('blakexiaolong', {
         'type': 'floating-chat',
-        'floating-chat.donateButton.text': 'Tip Me',
+        'floating-chat.donateButton.text': 'Send a tip!',
         'floating-chat.donateButton.background-color': '#794bc4',
         'floating-chat.donateButton.text-color': '#fff'
       });

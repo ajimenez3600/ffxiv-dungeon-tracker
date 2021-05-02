@@ -1,12 +1,12 @@
 import Vue from 'vue/dist/vue.esm'
-
 import Chart, { registerables } from 'chart.js/auto';
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
+
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 document.addEventListener('DOMContentLoaded', () => {
   var colors = [
