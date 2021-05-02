@@ -42,14 +42,22 @@ class Metrics::RoulettesController < ApplicationController
   end
 
   # multi table?
-	@@ -108,10 +54,6 @@ def roulette_efficiency
+  # https://jsfiddle.net/TLAV8/
+  def queue_time
+  end
+  def total_time
+  end
+  def roulette_efficiency
+  end
 
   private
 
   def levels
     @levels ||= InstanceEntry.all
       .map(&:start_level)
-	@@ -121,39 +63,8 @@ def levels
+      .uniq
+      .sort
+  end
 
   def roulettes
     @roulettes ||= InstanceEntry.all.to_a
