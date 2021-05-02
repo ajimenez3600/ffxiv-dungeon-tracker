@@ -14,14 +14,14 @@ Role.create([
 ])
 
 Roulette.create([
-  { name: 'Leveling' },
-  { name: 'Trials' },
-  { name: '50/60/70' },
-  { name: 'Alliance Raid' },
-  { name: 'Normal Raid' },
-  { name: 'MSQ' },
-  { name: 'Guildhest' },
-  { name: 'Level 80' },
-  { name: 'Expert' },
-  { name: 'No Roulette' }
+  { name: 'Leveling', grant_xp: true },
+  { name: 'Trials', grant_xp: true },
+  { name: '50/60/70', grant_xp: true },
+  { name: 'Alliance Raid', grant_xp: true },
+  { name: 'Normal Raid', grant_xp: true },
+  { name: 'MSQ', grant_xp: true },
+  { name: 'Guildhest', grant_xp: true },
+  { name: 'Level 80', grant_xp: false },
+  { name: 'Expert', grant_xp: false },
+  { name: 'No Roulette', grant_xp: false }
 ])
