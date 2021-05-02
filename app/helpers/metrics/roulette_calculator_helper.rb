@@ -24,7 +24,7 @@ module Metrics::RouletteCalculatorHelper
       estimated_xp = estimated_total_xp - Level.total_xp(estimated_level)
       remaining_roulettes = roulettes - best_set.map { |r| r[:roulette] }
 
-      return { start_level => scrub_db_info(this_level) }
+      return { start_level => scrub_db_info(best_set) }
         .merge(calculate_ordering(estimated_level, estimated_xp, remaining_roulettes))
     else
       return { start_level => scrub_db_info(roulette_xp) }
