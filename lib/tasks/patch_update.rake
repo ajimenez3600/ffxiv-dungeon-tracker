@@ -49,7 +49,7 @@ namespace :patch_update do
     fetched_instances = JSON.parse(response.body)['Results']
     puts "fetched #{fetched_instances.count} instances"
 
-    instance_names = fetched_instances.map { |i| i['ContentType']['Name'] }
+    instance_names = fetched_instances.map { |i| i['Name'] }
     Instance.all.each { |i| i.delete unless instance_names.include?(i.name) }
 
     fetched_instances.each do |fetched_instance|
@@ -159,6 +159,25 @@ namespace :patch_update do
       level.recommended_dungeon_id = xp_data['ProperDungeon']
       level.item_level_sync = xp_data['ItemLevelSync']
 
+      next if level.exp_to_next == 0
+
+      if level.changed? then
+        if level.valid? then
+          level.save
+        else
+          puts  level.errors
+        end
+      end
+    end
+    puts "levels imported!"
+
+    levels = Level.all.sort_by(&:number)
+    levels.each_with_index do |level, ix|
+      if ix == 0 then
+        level.total_xp = 0
+      else
+        level.total_xp = levels[ix-1].total_xp + levels[ix-1].exp_to_next
+      end
       if level.changed? then
         if level.valid? then
           level.save
@@ -167,6 +186,6 @@ namespace :patch_update do
         end
       end
     end
-    puts 'levels imported!'
+    puts "level data calculated!"
   end
 end
