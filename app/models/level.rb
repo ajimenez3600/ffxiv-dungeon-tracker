@@ -3,6 +3,6 @@ class Level < ApplicationRecord
     Level.find_by_number(level).total_xp + xp
   end
   def self.get_level(xp)
-    Level.where(total_xp: xp..).map(&:number).min
+    Level.where(total_xp: ..xp).map(&:number).max
   end
 end

@@ -10,14 +10,16 @@ module Metrics::RouletteCalculatorHelper
       }
     end
 
-    xp_to_next = (Level.total_xp(start_level + 1) * 1.03) - total_xp # buffer xp to next by a bit
+    xp_to_next = (Level.total_xp(start_level + 1) * 1.03).to_i - total_xp # buffer xp to next by a bit
     puts "xp to next: #{xp_to_next} | predicted xp: #{roulette_xp.map { |r| r[:predicted_xp] }.sum}"
     if roulette_xp.map { |r| r[:predicted_xp] }.sum > xp_to_next then
-      best_set = powerset!(roulette_xp)
-        .keep_if { |s| s.map { |r| r[:predicted_xp] }.sum > xp_to_next }
-        .sort_by { |s| s.map { |r| r[:next_level_xp] }.sum }
-        .reverse
-        .first
+
+      sets = powerset!(roulette_xp.dup).keep_if { |s| s.map { |r| r[:predicted_xp] }.sum > xp_to_next }
+      best_set = sets.sort_by do |set|
+        roulette_xp.reject do |roulette|
+          set.map { |s| s[:name] }.include?(roulette[:name])
+        end.map { |roulette| roulette[:next_level_xp] }.sum
+      end.reverse.first
 
       estimated_total_xp = total_xp + best_set.map { |r| r[:predicted_xp] }.sum
       estimated_level = Level.get_level(estimated_total_xp)
