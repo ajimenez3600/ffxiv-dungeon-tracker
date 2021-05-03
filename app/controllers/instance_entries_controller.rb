@@ -63,9 +63,11 @@ class InstanceEntriesController < ApplicationController
       if instances.count > 20 then
         expansion_group = { }
         Expansion.all.sort_by(&:api_id).each do |expansion|
-          instances = Instance.where(instance_type: instance_type, expansion: expansion)
-          next unless instances.count > 0
-          expansion_group[expansion.name] = instances.map(&:name)
+          instances = Instance
+            .where(instance_type: instance_type, expansion: expansion)
+            .order(required_level: :asc, required_item_level: :asc, name: :asc)
+            .map(&:name)
+          expansion_group[expansion.name] = instances if instances.count > 0
         end
         group[instance_type] = expansion_group
       else
