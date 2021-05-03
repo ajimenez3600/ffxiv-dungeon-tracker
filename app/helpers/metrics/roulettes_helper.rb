@@ -1,10 +1,10 @@
 module Metrics::RoulettesHelper
-  def table_data(where_options, selector, grouper = ->(e) { e.roulette }, sub_grouper = nil)
+  def table_data(where_options, selector, grouper = ->(e) { e.roulette.name }, sub_grouper = nil)
     entries = InstanceEntry.where(where_options).map do |data|
       { data: data, value: selector.call(data) }
     end
     levels.map do |level|
-      { level: level, data: entries.keep_if { |e| e[:data].start_level == level} }
+      { level: level, data: entries.select { |e| e[:data].start_level == level} }
     end.each do |obj|
       obj[:data] = obj[:data].group_by { |e| grouper.call(e[:data]) }
       obj[:data].keys.each do |group|
@@ -18,11 +18,6 @@ module Metrics::RoulettesHelper
         end
       end
     end
-  end
-
-  def get_average(values)
-    return 0 unless values.count > 0
-    values.map(&:value).sum / values.count
   end
 
   def chart_data(where_options, selector, x_grouper = ->(e) { e.roulette }, graph_grouper = -> (e) { 1 })
@@ -44,5 +39,17 @@ module Metrics::RoulettesHelper
       end
     end
     graphs
+  end
+
+  def get_average(values)
+    return 0 unless values.count > 0
+    values.map { |e| e[:value] }.sum / values.count
+  end
+
+  def levels
+    @levels ||= InstanceEntry.all
+      .map(&:start_level)
+      .uniq
+      .sort
   end
 end
