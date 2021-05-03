@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_24_071300) do
+ActiveRecord::Schema.define(version: 2021_05_01_193724) do
 
   create_table "expansions", force: :cascade do |t|
     t.string "name"
@@ -20,27 +20,27 @@ ActiveRecord::Schema.define(version: 2021_04_24_071300) do
   end
 
   create_table "instance_entries", force: :cascade do |t|
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.datetime "start_time"
-    t.integer "start_level"
-    t.integer "start_xp"
-    t.datetime "queue_pop_time"
-    t.datetime "finish_time"
-    t.integer "finish_level"
-    t.integer "finish_xp"
-    t.integer "xp_bonus"
-    t.integer "roulette_bonus"
-    t.integer "new_player_bonus"
-    t.integer "role_in_need_bonus"
-    t.integer "other_bonus"
-    t.integer "commends"
-    t.string "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "instance_id"
     t.integer "job_id"
-    t.boolean "queue_outlier"
-    t.boolean "duration_outlier"
-    t.boolean "xp_outlier"
+    t.integer "start_level", null: false
+    t.integer "start_xp", null: false
+    t.integer "finish_level", null: false
+    t.integer "finish_xp", null: false
+    t.integer "roulette_bonus", default: 0, null: false
+    t.integer "role_in_need_bonus", default: 0, null: false
+    t.integer "new_player_bonus", default: 0, null: false
+    t.integer "other_bonus", default: 0, null: false
+    t.integer "xp_bonus", default: 0, null: false
+    t.boolean "xp_outlier", default: false, null: false
+    t.datetime "start_time", null: false
+    t.datetime "queue_pop_time", null: false
+    t.boolean "queue_outlier", default: false, null: false
+    t.datetime "finish_time", null: false
+    t.boolean "duration_outlier", default: false, null: false
+    t.integer "commends", default: 0, null: false
+    t.string "notes", default: "0", null: false
     t.integer "roulette_id"
   end
 
@@ -92,6 +92,7 @@ ActiveRecord::Schema.define(version: 2021_04_24_071300) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "recommended_dungeon_id"
+    t.integer "total_xp"
   end
 
   create_table "roles", force: :cascade do |t|
@@ -105,6 +106,7 @@ ActiveRecord::Schema.define(version: 2021_04_24_071300) do
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "grant_xp", default: false, null: false
   end
 
 end

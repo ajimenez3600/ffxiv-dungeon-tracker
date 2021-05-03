@@ -5,7 +5,7 @@ class Metrics::RoulettesController < ApplicationController
     @columns = [{ key: 'level', sortable: true }]
     @columns += roulettes.map{ |r| { key: r.name, sortable: true } }
 
-    options = { xp_outlier: false }
+    options = { xp_outlier: false, roulette_id: Roulette.where(grant_xp: true).pluck(:id) }
     selector = ->(e) { e.roulette_bonus }
     @table_data = table_data(options, selector)
     @chart_data = chart_data(options, selector)
@@ -15,7 +15,7 @@ class Metrics::RoulettesController < ApplicationController
     @columns = [{ key: 'level', sortable: true }]
     @columns += roulettes.map{ |r| { key: r.name, sortable: true } }
 
-    options = { xp_outlier: false }
+    options = { xp_outlier: false, roulette_id: Roulette.where(grant_xp: true).pluck(:id) }
     selector = ->(e) { e.combat_xp }
     @table_data = table_data(options, selector)
     @chart_data = chart_data(options, selector)
@@ -25,7 +25,7 @@ class Metrics::RoulettesController < ApplicationController
     @columns = [{ key: 'level', sortable: true }]
     @columns += roulettes.map{ |r| { key: r.name, sortable: true } }
 
-    options = { xp_outlier: false }
+    options = { xp_outlier: false, roulette_id: Roulette.where(grant_xp: true).pluck(:id) }
     selector = ->(e) { e.bonus_xp + e.combat_xp }
     @table_data = table_data(options, selector)
     @chart_data = chart_data(options, selector)
@@ -51,13 +51,6 @@ class Metrics::RoulettesController < ApplicationController
   end
 
   private
-
-  def levels
-    @levels ||= InstanceEntry.all
-      .map(&:start_level)
-      .uniq
-      .sort
-  end
 
   def roulettes
     @roulettes ||= InstanceEntry.all.to_a
