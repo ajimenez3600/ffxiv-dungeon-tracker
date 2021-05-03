@@ -7,10 +7,13 @@
     chart_entries: @chart_data.to_json
   } do %>
   <b-container>
-    <canvas id='bubbleplot' width='400' height='400'></canvas>
+    <canvas
+      v-for="key in Object.keys(chartEntries)" :key="key"
+      :id="'bubbleplot-' + key" width='400' height='400'>
+    </canvas>
     <b-row>
       <b-col>
-        <b-table :fields=columns :items=table_entries>
+        <b-table :fields=columns :items=tableEntries>
           <template #cell(level)="data">
             {{ data.value }}
           </template>

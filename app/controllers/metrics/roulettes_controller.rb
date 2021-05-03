@@ -26,7 +26,7 @@ class Metrics::RoulettesController < ApplicationController
     @columns += roulettes.map{ |r| { key: r.name, sortable: true } }
 
     options = { xp_outlier: false, roulette_id: Roulette.where(grant_xp: true).pluck(:id) }
-    selector = ->(e) { e.bonus_xp + e.combat_xp }
+    selector = ->(e) { e.combat_and_bonus_xp }
     @table_data = table_data(options, selector)
     @chart_data = chart_data(options, selector)
   end
@@ -36,7 +36,7 @@ class Metrics::RoulettesController < ApplicationController
     @columns += roulettes.map{ |r| { key: r.name, sortable: true } }
 
     options = { duration_outlier: false }
-    selector = ->(e) { e.finish_time - e.queue_pop_time }
+    selector = ->(e) { e.minutes_in_instance }
     @table_data = table_data(options, selector)
     @chart_data = chart_data(options, selector)
   end

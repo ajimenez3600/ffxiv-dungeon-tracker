@@ -40,36 +40,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
   var rouletteMetrics = document.getElementById('roulette-metrics')
   if (rouletteMetrics !== null) {
-    var chart_entries = JSON.parse(rouletteMetrics.dataset.chartEntries)["1"]
+    var chartEntries = JSON.parse(rouletteMetrics.dataset.chartEntries)
     new Vue({
       el: rouletteMetrics,
       data: {
-        table_entries: JSON.parse(rouletteMetrics.dataset.tableEntries),
-        chart_entries: chart_entries,
+        tableEntries: JSON.parse(rouletteMetrics.dataset.tableEntries),
+        chartEntries: chartEntries,
         columns: JSON.parse(rouletteMetrics.dataset.columns)
       },
     })
 
-    var ctx = document.getElementById('bubbleplot');
-    new Chart(ctx, {
-      type: 'bubble',
-      data: {
-        datasets: Object.keys(chart_entries).map((k, i) => {
-          return ({
-            label: k,
-            data: chart_entries[k],
-            borderColor: colors[i]['border'],
-            backgroundColor: colors[i]['background']
-          })
-        }),
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true,
-          }
-        }
-      }
+    Object.keys(chartEntries).forEach((graph) => {
+      var ctx = document.getElementById(`bubbleplot-${graph}`);
+      new Chart(ctx, {
+        type: 'bubble',
+        data: {
+          datasets: Object.keys(chartEntries[graph]).map((k, i) => {
+            return ({
+              label: k,
+              data: chartEntries[graph][k],
+              borderColor: colors[i]['border'],
+              backgroundColor: colors[i]['background']
+            });
+          }),
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+            },
+          },
+        },
+      });
     });
   }
 
