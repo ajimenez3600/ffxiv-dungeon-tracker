@@ -13,7 +13,7 @@ class InstanceEntriesController < ApplicationController
     @instance_entry.job = Job.find_by_name(params[:job_name])
     @instance_entry.roulette = Roulette.find_by_name(params[:roulette_name]) if params[:roulette_name].present?
 
-    @instance_entry.xp_bonus ||= 100
+    @instance_entry.xp_bonus ||= 0
     @instance_entry.roulette_bonus ||= 0
     @instance_entry.new_player_bonus ||= 0
     @instance_entry.role_in_need_bonus ||= 0
