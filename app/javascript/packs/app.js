@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   var rouletteMetrics = document.getElementById('roulette-metrics')
   if (rouletteMetrics !== null) {
-    var chart_entries = JSON.parse(rouletteMetrics.dataset.chartEntries)
+    var chart_entries = JSON.parse(rouletteMetrics.dataset.chartEntries)["1"]
     new Vue({
       el: rouletteMetrics,
       data: {

@@ -20,7 +20,7 @@ module Metrics::RoulettesHelper
     end
   end
 
-  def chart_data(where_options, selector, x_grouper = ->(e) { e.roulette }, graph_grouper = -> (e) { 1 })
+  def chart_data(where_options, selector, x_grouper = ->(e) { e.roulette.name }, graph_grouper = -> (e) { 1 })
     entries = InstanceEntry.where(where_options).map do |data|
       { data: data, value: selector.call(data) }
     end
