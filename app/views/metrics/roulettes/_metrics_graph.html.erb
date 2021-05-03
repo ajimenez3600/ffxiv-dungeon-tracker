@@ -16,6 +16,10 @@
           </template>
           <template #cell()="data">
             {{ data }}
+            ----
+            {{ [data['field']['key']] }}
+            ----
+            {{ data['item']['data'] }}
           </template>
         </b-table>
       </b-col>
