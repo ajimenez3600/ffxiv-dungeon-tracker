@@ -35,7 +35,7 @@ class Metrics::RoulettesController < ApplicationController
     @columns = [{ key: 'level', sortable: true }]
     @columns += roulettes.map{ |r| { key: r.name, sortable: true } }
 
-    options = { duration_outlier: false }
+    options = { duration_outlier: false, roulette_id: Roulette.all.pluck(:id) }
     selector = ->(e) { e.minutes_in_instance }
     @table_data = table_data(options, selector)
     @chart_data = chart_data(options, selector)
@@ -53,9 +53,6 @@ class Metrics::RoulettesController < ApplicationController
   private
 
   def roulettes
-    @roulettes ||= InstanceEntry.all.to_a
-      .keep_if { |e| !e.roulette.nil? and e.roulette.name != 'No Roulette' }
-      .map { |e| e.roulette }
-      .uniq
+    @roulettes ||= Roulette.all
   end
 end

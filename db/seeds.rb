@@ -23,5 +23,4 @@ Roulette.create([
   { name: 'Guildhest', grant_xp: true },
   { name: 'Level 80', grant_xp: false },
   { name: 'Expert', grant_xp: false },
-  { name: 'No Roulette', grant_xp: false }
 ])
