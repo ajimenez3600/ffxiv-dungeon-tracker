@@ -12,8 +12,8 @@ module Metrics::RouletteCalculatorHelper
 
     xp_to_next = (Level.total_xp(start_level + 1) * 1.03).to_i - total_xp # buffer xp to next by a bit
     puts "xp to next: #{xp_to_next} | predicted xp: #{roulette_xp.map { |r| r[:predicted_xp] }.sum}"
-    if roulette_xp.map { |r| r[:predicted_xp] }.sum > xp_to_next then
 
+    if roulette_xp.map { |r| r[:predicted_xp] }.sum > xp_to_next then
       sets = powerset!(roulette_xp.dup).keep_if { |s| s.map { |r| r[:predicted_xp] }.sum > xp_to_next }
       best_set = sets.sort_by do |set|
         roulette_xp.reject do |roulette|
@@ -26,20 +26,23 @@ module Metrics::RouletteCalculatorHelper
       estimated_xp = estimated_total_xp - Level.total_xp(estimated_level)
       remaining_roulettes = roulettes - best_set.map { |r| r[:roulette] }
 
-
       lower_ordering = calculate_ordering(estimated_level, estimated_xp, remaining_roulettes)
       return
       {
-        start_level => scrub_db_info(best_set),
+        start_level: scrub_db_info(best_set),
         estimated_level: estimated_level,
-        estimated_xp => estimated_xp
+        estimated_xp: estimated_xp
       }.merge(scrub_toplevel_fields(lower_ordering))
     else
+      estimated_total_xp = total_xp + roulette_xp.map { |r| r[:predicted_xp] }.sum
+      estimated_level = Level.get_level(estimated_total_xp)
+      estimated_xp = estimated_total_xp - Level.total_xp(estimated_level)
+            
       return
       {
-        start_level => scrub_db_info(roulette_xp),
+        start_level: scrub_db_info(roulette_xp),
         estimated_level: estimated_level,
-        estimated_xp => estimated_xp
+        estimated_xp: estimated_xp
       }
     end
   end
