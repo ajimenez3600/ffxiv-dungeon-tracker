@@ -1,5 +1,13 @@
 module Metrics::RouletteCalculatorHelper
   def calculate_ordering(start_level, start_xp, roulettes)
+    if roulettes.count == 0 then
+      return {
+        start_level: start_level,
+        estimated_level: start_level,
+        estimated_xp: start_xp
+      }
+    end
+
     total_xp = Level.total_xp(start_level, start_xp)
     roulette_xp = roulettes.map do |roulette|
       {
@@ -27,9 +35,8 @@ module Metrics::RouletteCalculatorHelper
       remaining_roulettes = roulettes - best_set.map { |r| r[:roulette] }
 
       lower_ordering = calculate_ordering(estimated_level, estimated_xp, remaining_roulettes)
-      return
-      {
-        start_level: scrub_db_info(best_set),
+      return {
+        start_level => scrub_db_info(best_set),
         estimated_level: estimated_level,
         estimated_xp: estimated_xp
       }.merge(scrub_toplevel_fields(lower_ordering))
@@ -37,10 +44,9 @@ module Metrics::RouletteCalculatorHelper
       estimated_total_xp = total_xp + roulette_xp.map { |r| r[:predicted_xp] }.sum
       estimated_level = Level.get_level(estimated_total_xp)
       estimated_xp = estimated_total_xp - Level.total_xp(estimated_level)
-            
-      return
-      {
-        start_level: scrub_db_info(roulette_xp),
+
+      return {
+        start_level => scrub_db_info(roulette_xp),
         estimated_level: estimated_level,
         estimated_xp: estimated_xp
       }
