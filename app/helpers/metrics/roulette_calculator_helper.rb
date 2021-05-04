@@ -26,21 +26,36 @@ module Metrics::RouletteCalculatorHelper
       estimated_xp = estimated_total_xp - Level.total_xp(estimated_level)
       remaining_roulettes = roulettes - best_set.map { |r| r[:roulette] }
 
-      return { start_level => scrub_db_info(best_set) }
-        .merge(calculate_ordering(estimated_level, estimated_xp, remaining_roulettes))
+
+      lower_ordering = calculate_ordering(estimated_level, estimated_xp, remaining_roulettes)
+      return
+      {
+        start_level => scrub_db_info(best_set),
+        estimated_level: estimated_level,
+        estimated_xp => estimated_xp
+      }.merge(scrub_toplevel_fields(lower_ordering))
     else
-      return { start_level => scrub_db_info(roulette_xp) }
+      return
+      {
+        start_level => scrub_db_info(roulette_xp),
+        estimated_level: estimated_level,
+        estimated_xp => estimated_xp
+      }
     end
   end
 
   def get_xp_for_roulette(roulette, start_level)
-    entries = InstanceEntry.where(start_level: start_level, roulette: roulette)
+    entries = InstanceEntry.where(start_level: start_level, roulette: roulette, xp_outlier: false)
     return 0 if entries.count == 0
 
     entries.sum { |e| e.bonus_xp + e.combat_xp } / entries.count
   end
 
   private
+
+  def scrub_toplevel_fields(ordering)
+    ordering.except(:estimated_level, :estimated_xp)
+  end
 
   def scrub_db_info(roulette_xp)
     roulette_xp.each { |r| r.except!(:roulette) }

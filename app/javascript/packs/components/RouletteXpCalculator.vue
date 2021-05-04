@@ -1,6 +1,6 @@
 <template>
   <b-container>
-    <b-form @submit=calculate>
+    <b-form>
       <label for='start_level'>Start Level</label>
       <b-form-input id='start_level' required v-model="start_level" />
 
@@ -12,15 +12,20 @@
         </b-form-checkbox-group>
       </b-form-group>
 
-      <b-btn type='submit' class='my-2' variant='info'>Math me!</b-btn>
+      <b-btn @click="calculate()" class='my-2' variant='info'>Math me!</b-btn>
+      <b-btn @click="calculate(true)" class='my-2' variant='info'>Math me to the max!</b-btn>
     </b-form>
 
     <section v-if='rouletteSuggestions'>
-      <b-card v-for="key in Object.keys(rouletteSuggestions)" :key="key" :title="'Level ' + key">
-        <b-card-text>
-          <b-table :items="rouletteSuggestions[key]" />
-        </b-card-text>
-      </b-card>
+      <div v-for="day in Object.keys(rouletteSuggestions)" :key="day">
+        <h3>Day {{day}}</h3>
+        <b-card v-for="level in Object.keys(rouletteSuggestions[day])" :key="level" :title="'Level ' + level">
+          <b-card-text>
+            <b-table :items="rouletteSuggestions[day][level]" />
+          </b-card-text>
+        </b-card>
+        <hr />
+      </div>
     </section>
   </b-container>
 </template>
@@ -46,8 +51,7 @@
       };
     },
     methods: {
-      calculate(e) {
-        if (typeof(e) !== 'undefined') e.preventDefault();
+      calculate(max = false) {
         axios({
           method: 'post',
           headers: { 'Content-Type': 'text/json' },
@@ -56,6 +60,7 @@
             start_level: this.start_level,
             start_xp: this.start_xp,
             roulettes: this.rouletteSelected,
+            to_max: max
           }
         }).then((response) => {
           this.rouletteSuggestions = response.data;

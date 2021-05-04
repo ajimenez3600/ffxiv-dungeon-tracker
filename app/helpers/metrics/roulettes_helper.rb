@@ -43,7 +43,7 @@ module Metrics::RoulettesHelper
 
   def get_average(values)
     return 0 unless values.count > 0
-    values.map { |e| e[:value] }.sum / values.count
+    (values.map { |e| e[:value] }.sum / values.count).round
   end
 
   def levels
