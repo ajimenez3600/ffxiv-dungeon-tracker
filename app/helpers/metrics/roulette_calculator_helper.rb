@@ -2,7 +2,6 @@ module Metrics::RouletteCalculatorHelper
   def calculate_ordering(start_level, start_xp, roulettes)
     if roulettes.count == 0 then
       return {
-        start_level: start_level,
         estimated_level: start_level,
         estimated_xp: start_xp
       }

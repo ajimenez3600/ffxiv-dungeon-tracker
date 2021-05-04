@@ -13,12 +13,12 @@
       </b-form-group>
 
       <b-btn @click="calculate()" class='my-2' variant='info'>Math me!</b-btn>
-      <b-btn @click="calculate(true)" class='my-2' variant='info'>Math me to the max!</b-btn>
+      <b-btn @click="calculate(true)" disabled class='my-2' variant='info'>Math me to the max!</b-btn>
     </b-form>
 
     <section v-if='rouletteSuggestions'>
       <div v-for="day in Object.keys(rouletteSuggestions)" :key="day">
-        <h3>Day {{day}}</h3>
+        <h3 v-if="Object.keys(rouletteSuggestions).length !== 1">Day {{day}}</h3>
         <b-card v-for="level in Object.keys(rouletteSuggestions[day])" :key="level" :title="'Level ' + level">
           <b-card-text>
             <b-table :items="rouletteSuggestions[day][level]" />
@@ -47,6 +47,8 @@
         start_level: 1,
         start_xp: 0,
         rouletteSelected: [],
+        estimated_level: 0,
+        estimated_xp: 0,
         rouletteSuggestions: undefined,
       };
     },
@@ -63,7 +65,12 @@
             to_max: max
           }
         }).then((response) => {
-          this.rouletteSuggestions = response.data;
+          let response = response.data;
+          this.estimated_level = response.estimated_level;
+          this.estimated_xp = response.estimated_xp;
+          response.delete(response.estimated_level)
+          response.delete(response.estimated_xp)
+          this.rouletteSuggestions = response;
         })
       },
     },

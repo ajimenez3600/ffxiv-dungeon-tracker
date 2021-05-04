@@ -13,7 +13,7 @@ class Metrics::RouletteCalculatorController < ApplicationController
     
     day = 1
     ordering = calculate_ordering(rq['start_level'].to_i, rq['start_xp'].to_i, roulettes)
-    day_ordering = { day: ordering }
+    day_ordering = { day => ordering }
     return render json: day_ordering unless rq['to_max'].present? && !!rq['to_max']
 
     while max_level > ordering[:estimated_level]
