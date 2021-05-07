@@ -65,12 +65,12 @@
             to_max: max
           }
         }).then((response) => {
-          let response = response.data;
-          this.estimated_level = response.estimated_level;
-          this.estimated_xp = response.estimated_xp;
-          response.delete(response.estimated_level)
-          response.delete(response.estimated_xp)
-          this.rouletteSuggestions = response;
+          let data = response.data;
+          this.estimated_level = data.estimated_level;
+          this.estimated_xp = data.estimated_xp;
+          data.delete(data.estimated_level)
+          data.delete(data.estimated_xp)
+          this.rouletteSuggestions = data;
         })
       },
     },
