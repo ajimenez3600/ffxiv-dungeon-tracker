@@ -44,6 +44,12 @@ class Metrics::RoulettesController < ApplicationController
   # multi table?
   # https://jsfiddle.net/TLAV8/
   def queue_time
+    options = { duration_outlier: false, roulette_id: Roulette.all.pluck(:id) }
+    selector = ->(e) { e.minutes_to_queue_pop }
+    grouper = ->(e) { e.job.role.name }
+    sub_grouper = ->(e) { e.roulette.name }
+    @table_data = table_data(options, selector, grouper, sub_grouper)
+    @chart_data = { }
   end
   def total_time
   end

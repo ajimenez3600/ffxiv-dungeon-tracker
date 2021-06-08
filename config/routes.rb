@@ -10,6 +10,7 @@ Rails.application.routes.draw do
         get :instance_xp
         get :total_xp
         get :instance_time
+        get :queue_time
       end
     end
     resources :roulette_calculator, only: [:new, :create]  do
