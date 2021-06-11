@@ -8,7 +8,8 @@ Vue.use(IconsPlugin)
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-import RouletteXpCalculator from './components/RouletteXpCalculator'
+import RouletteXpCalculator from '../components/RouletteXpCalculator'
+import InstanceEntriesNewView from '../views/instance_entries/new.vue'
 
 document.addEventListener('DOMContentLoaded', () => {
   var colors = [
@@ -25,6 +26,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (navbar !== null) {
     new Vue({ el: navbar })
   }
+
+  new Vue({
+    el: '#instance-entries-new-view',
+    components: {
+      'instance-entries-new-view': InstanceEntriesNewView,
+    },
+  });
 
   var dungeonForm = document.getElementById('dungeon-form')
   if (dungeonForm !== null) {

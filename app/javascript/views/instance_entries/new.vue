@@ -1,0 +1,177 @@
+<template>
+<b-container>
+  <b-form method="POST" action="/instance_entries">
+    <section id="pre-instance">
+      <div class="form-row">
+        <h3>Pre-Instance</h3>
+      </div>
+      <div class="form-row">
+        <label for="start_time">Start Time</label>
+        <input required id="start_time" name='start_time' type="datetime-local" class="form-control" />
+      </div>
+      <div class="form-row">
+        <label for="roulette_name">Roulette Name</label>
+        <b-form-select id="roulette_name" name='roulette_name' :options="roulettes" />
+      </div>
+      <div class="form-row">
+        <label for="job_name">Job Name</label>
+        <b-form-select required id="job_name" name='job_name' :options="jobs" />
+      </div>
+      <div class="form-row">
+        <div class="col-6">
+          <label for="start_level">Starting Level</label>
+          <input required id="start_level" name='start_level' type="number" class="form-control" />
+        </div>
+        <div class="col-6">
+          <label for="start_xp">Starting XP</label>
+          <input required id="start_xp" name='start_xp' type="number" class="form-control">
+        </div>
+      </div>
+      <div class="form-row">
+        <label for="queue_pop_time">Queue Pop Time</label>
+        <input required id="queue_pop_time" name='queue_pop_time' type="datetime-local" class="form-control" />
+      </div>
+    </section>
+
+    <section>
+      <div class="form-row">
+        <h3>Instance</h3>
+      </div>
+      <div class='accordion' role=tablist>
+        <b-card no-body class='mb-1' v-for="key in Object.keys(instances)" :key="key">
+          <b-card-header header-tag='header' class='p-1' role='tab'>
+            <b-button v-if="instances[key] instanceof Array" block @click="() => $root.$emit('bv::toggle::collapse', key)">{{key}}</b-button>
+            <div v-else>
+              <h5 style='text-align: center;'>{{key}}</h5>
+                <b-button-group style='width: 100%;'>
+                  <b-button
+                    class='mx-1'
+                    v-for="key2 in Object.keys(instances[key])" :key="key2" 
+                    @click="() => $root.$emit('bv::toggle::collapse', key + ' ' + key2)"
+                  >
+                    {{key2}}
+                  </b-button>
+                </b-button-group>
+            </div>
+          </b-card-header>
+          <b-collapse v-if="instances[key] instanceof Array" :id='key' accordion='instances-accordion' role='tabpanel'>
+            <b-card-body>
+              <b-form-radio-group required name='instance_selection' :options='instances[key]' stacked size='sm' />
+            </b-card-body>
+          </b-collapse>
+          <b-collapse v-else v-for="key2 in Object.keys(instances[key])" :key="key2" :id="key + ' ' + key2" accordion='instances-accordion' role='tabpanel'>
+            <b-card-body>
+              <b-form-radio-group required name='instance_selection' :options='instances[key][key2]' stacked size='sm' />
+            </b-card-body>
+          </b-collapse>
+        </b-card>
+      </div>
+    </section>
+
+    <section id='instance'>
+      <div class="form-row">
+        <h3>Post-Instance</h3>
+      </div>
+      <div class="form-row">
+        <label for="finish_time">Finish Time</label>
+        <input required id="finish_time" name='finish_time' type="datetime-local" class="form-control" />
+      </div>
+      <div class="form-row">
+        <div class="col-6">
+          <label for="finish_level">Finish Level</label>
+          <input required id="finish_level" name='finish_level' type="number" class="form-control" />
+        </div>
+        <div class="col-6">
+          <label for="finish_xp">Finish XP</label>
+          <input required id="finish_xp" name='finish_xp' type="number" class="form-control">
+        </div>
+      </div>
+      <div class="form-row">
+        <label for="xp_bonus">XP Bonus %</label>
+        <input id="xp_bonus" name='xp_bonus' type="number" class="form-control" />
+      </div>
+      <div class="form-row">
+        <label for="roulette_bonus">Roulette Bonus XP</label>
+        <input id="roulette_bonus" name='roulette_bonus' type="number" class="form-control" />
+      </div>
+      <div class="form-row">
+        <label for="new_player_bonus">New Player Bonus XP</label>
+        <input id="new_player_bonus" name='new_player_bonus' type="number" class="form-control" />
+      </div>
+      <div class="form-row">
+        <label for="role_in_need_bonus">Role in Need Bonus XP</label>
+        <input id="role_in_need_bonus" name='role_in_need_bonus' type="number" class="form-control" />
+      </div>
+      <div class="form-row">
+        <label for="other_bonus">Other Bonus XP</label>
+        <input id="other_bonus" name='other_bonus' type="number" class="form-control" />
+      </div>
+      <div class="form-row">
+        <label for="commends">Commends Received</label>
+        <input id="commends" name='commends' type="number" class="form-control" />
+      </div>
+      <div class="form-row">
+        <div role="group" tabindex="-1" class="bv-no-focus-ring">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" name='queue_outlier' class="custom-control-input" value="Are you queueing with someone?" id="option-0">
+            <label class="custom-control-label" for="option-0">
+              <span>Are you queueing with someone?</span>
+            </label>
+          </div>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" name='duration_outlier' class="custom-control-input" value="Did you join an in-prog?" id="option-1">
+            <label class="custom-control-label" for="option-1">
+              <span>Did you join an in-prog?</span>
+            </label>
+          </div>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" name='xp_outlier' class="custom-control-input" value="Did you hit level cap (or were at cap before starting)?" id="option-2">
+            <label class="custom-control-label" for="option-2">
+              <span>Did you hit level cap (or were at cap before starting)?</span>
+            </label>
+          </div>
+        </div>
+      </div>      
+      <div class="form-row">
+        <label for="notes">Notes</label>
+        <input id="notes" name='notes' class="form-control" />
+      </div>
+    </section>
+
+    <b-button class="my-3" variant=info type=submit>Submit</b-button>
+  </b-form>
+</b-container>
+</template>
+
+<script>
+import CSRF from 'components/shared/csrf.vue';
+
+export default {
+  components: {
+    csrf: CSRF,
+  },
+  props: {
+    instances: {
+      type: Object,
+      default: () => {},
+    },
+    jobs: {
+      type: Array,
+      default: () => [],
+    },
+    roulettes: {
+      type: Array,
+      default: () => [],
+    },
+  },
+  data() {
+    return {
+
+    };
+  },
+}
+</script>
+
+<style scoped>
+
+</style>
