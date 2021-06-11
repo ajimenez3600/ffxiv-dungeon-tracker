@@ -49,7 +49,13 @@ class Metrics::RoulettesController < ApplicationController
     grouper = ->(e) { e.job.role.name }
     sub_grouper = ->(e) { e.roulette.name }
     @table_data = table_data(options, selector, grouper, sub_grouper)
-    @chart_data = { }
+    @subgroup_columns = Role.all.map do |role|
+      Roulette.all.map do |roulette|
+        { group: role.name, subgroup: roulette.name }
+      end
+    end.flatten
+    @roulette_count = Roulette.count
+    @chart_data = chart_data(options, selector, grouper, sub_grouper)
   end
   def total_time
   end
