@@ -10,6 +10,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import RouletteXpCalculator from '../components/RouletteXpCalculator'
 import InstanceEntriesNewView from '../views/instance_entries/new.vue'
+import MultiMetricsGraph from '../components/shared/multi_metrics_graph'
 
 document.addEventListener('DOMContentLoaded', () => {
   var colors = [
@@ -31,6 +32,13 @@ document.addEventListener('DOMContentLoaded', () => {
     el: '#instance-entries-new-view',
     components: {
       'instance-entries-new-view': InstanceEntriesNewView,
+    },
+  });
+
+  new Vue({
+    el: '#multi-metrics-graph',
+    components: {
+      'multi-metrics-graph': MultiMetricsGraph,
     },
   });
 

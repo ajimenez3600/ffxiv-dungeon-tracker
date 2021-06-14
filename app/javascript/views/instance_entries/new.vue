@@ -11,7 +11,7 @@
       </div>
       <div class="form-row">
         <label for="roulette_name">Roulette Name</label>
-        <b-form-select id="roulette_name" name='roulette_name' :options="roulettes" />
+        <b-form-select id="roulette_name" name='roulette_name' :options="roulettes" v-model="form.rouletteName" />
       </div>
       <div class="form-row">
         <label for="job_name">Job Name</label>
@@ -54,14 +54,14 @@
                 </b-button-group>
             </div>
           </b-card-header>
-          <b-collapse v-if="instances[key] instanceof Array" :id='key' accordion='instances-accordion' role='tabpanel'>
+          <b-collapse v-if='instances[key] instanceof Array' :id='key' accordion='instances-accordion' role='tabpanel'>
             <b-card-body>
-              <b-form-radio-group required name='instance_selection' :options='instances[key]' stacked size='sm' />
+              <b-form-radio-group required name='instance_selection' :options='deepFilterRoulettes(instances[key]).map(x=>x.name)' stacked size='sm' />
             </b-card-body>
           </b-collapse>
           <b-collapse v-else v-for="key2 in Object.keys(instances[key])" :key="key2" :id="key + ' ' + key2" accordion='instances-accordion' role='tabpanel'>
             <b-card-body>
-              <b-form-radio-group required name='instance_selection' :options='instances[key][key2]' stacked size='sm' />
+              <b-form-radio-group required name='instance_selection' :options='deepFilterRoulettes(instances[key][key2]).map(x=>x.name)' stacked size='sm' />
             </b-card-body>
           </b-collapse>
         </b-card>
@@ -166,10 +166,38 @@ export default {
   },
   data() {
     return {
-
+      rouletteNameMapping: [
+        { rouletteName: 'Leveling', fieldName: 'leveling_roulette' },
+        { rouletteName: 'Trials', fieldName: 'trial_roulette' },
+        { rouletteName: '50/60/70', fieldName: 'level_50_60_70_roulette' },
+        { rouletteName: 'Alliance Raid', fieldName: 'alliance_roulette' },
+        { rouletteName: 'Normal Raid', fieldName: 'normal_raid_roulette' },
+        { rouletteName: 'MSQ', fieldName: 'msq_roulette' },
+        { rouletteName: 'Guildhest', fieldName: 'guild_hest_roulette' },
+        { rouletteName: 'Level 80', fieldName: 'level_80_roulette' },
+        { rouletteName: 'Expert', fieldName: 'expert_roulette' }
+      ],
+      form: {
+        rouletteName: '',
+      }
     };
   },
-}
+  methods: {
+    deepFilterRoulettes(instances) {
+      var mapping = this.rouletteNameMapping.filter(x => x.rouletteName == this.form.rouletteName)[0];
+      if (typeof(mapping) === 'undefined') {
+        return instances;
+      } else if (typeof(instances) == 'Object') {
+        return Object.keys(instances).map(key => {
+          this.deepFilterRoulettes(mapping.fieldName, instances[key]);
+        });
+      } else {
+        var x = instances.filter(x => x[mapping.fieldName]);
+        return instances.filter(x => x[mapping.fieldName]);
+      }
+    },
+  },
+};
 </script>
 
 <style scoped>
