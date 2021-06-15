@@ -54,6 +54,16 @@ class Metrics::RoulettesController < ApplicationController
         { group: role.name, subgroup: roulette.name }
       end
     end.flatten
+
+    @table_data = InstanceEntry.where(options).all.map do |ie|
+      {
+        role: ie.job.role.name,
+        roulette: ie.roulette.name,
+        queue_time: ie.minutes_to_queue_pop,
+        level: ie.start_level 
+      }
+    end
+
     @roulette_count = Roulette.count
     @chart_data = chart_data(options, selector, grouper, sub_grouper)
   end

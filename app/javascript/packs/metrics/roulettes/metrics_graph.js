@@ -1,6 +1,6 @@
 import Vue from 'vue/dist/vue.esm'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
-import MultiMetricsGraph from 'components/shared/multi_metrics_graph'
+import { Pivot } from 'vue-pivot-table-plus';
 
 Vue.use(BootstrapVue)
 
@@ -8,8 +8,8 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 // const view = new Vue({
-//   el: '#instance-entries-new-view',
+//   el: '#pivot-table',
 //   components: {
-//     'instance-entries-new-view': InstanceEntriesNewView,
+//     'pivot-table': Pivot,
 //   },
 // });

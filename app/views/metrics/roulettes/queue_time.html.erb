@@ -1,6 +1,29 @@
+<% javascript_pack_tag 'metrics/roulettes/metrics_graph' %>
+<% stylesheet_pack_tag 'metrics/roulettes/metrics_graph' %>
 <% content_for :title, 'Roulette Queue Time by Role, Roulette, and Level' %>
 <h1><%= yield(:title) %></h1>
 
-<div id='multi-metrics-graph'>
-  <multi-metrics-graph />
+<div id='pivot-table'>
+  <pivot-table
+    :data='<%= @table_data.to_json %>'
+    :fields="{
+      availableFields: [],
+      rowFields: [
+        { label: 'Level', getter: item => item.level }
+      ],
+      colFields: [
+        { label: 'Role', getter: item => item.role },
+        { label: 'Roulette', getter: item => item.roulette }
+      ],
+      fieldsOrder: {},
+    }"
+    :reducer="(accumulator, item, index, array) => {
+      var sum = accumulator + item.queue_time;
+      if (index == array.length - 1) {
+        return sum / array.length;
+      } else {
+        return sum;
+      }
+    }"
+  >
 </div>
