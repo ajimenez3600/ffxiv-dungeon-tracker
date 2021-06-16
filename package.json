@@ -12,6 +12,7 @@
     "chart.js": "^3.1.1",
     "vue": "^2.6.12",
     "vue-loader": "^15.9.6",
+    "vue-pivot-table-plus": "^0.7.0",
     "vue-template-compiler": "^2.6.12"
   },
   "version": "0.1.0",
