@@ -67,11 +67,12 @@ class InstanceEntriesController < ApplicationController
           instances = Instance
             .where(instance_type: instance_type, expansion_id: expansion.id)
             .order(required_level: :asc, required_item_level: :asc, name: :asc)
+            map(&:name)
           expansion_group[expansion.name] = instances if instances.count > 0
         end
         group[instance_type] = expansion_group
       else
-        group[instance_type] = instances
+        group[instance_type] = instances.map(&:name)
       end
     end
     group
