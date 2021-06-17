@@ -20,27 +20,27 @@ ActiveRecord::Schema.define(version: 2021_05_01_193724) do
   end
 
   create_table "instance_entries", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "instance_id"
-    t.integer "job_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "start_time", null: false
     t.integer "start_level", null: false
     t.integer "start_xp", null: false
+    t.datetime "queue_pop_time", null: false
+    t.datetime "finish_time", null: false
     t.integer "finish_level", null: false
     t.integer "finish_xp", null: false
+    t.integer "xp_bonus", default: 100, null: false
     t.integer "roulette_bonus", default: 0, null: false
-    t.integer "role_in_need_bonus", default: 0, null: false
     t.integer "new_player_bonus", default: 0, null: false
+    t.integer "role_in_need_bonus", default: 0, null: false
     t.integer "other_bonus", default: 0, null: false
-    t.integer "xp_bonus", default: 0, null: false
-    t.boolean "xp_outlier", default: false, null: false
-    t.datetime "start_time", null: false
-    t.datetime "queue_pop_time", null: false
-    t.boolean "queue_outlier", default: false, null: false
-    t.datetime "finish_time", null: false
-    t.boolean "duration_outlier", default: false, null: false
     t.integer "commends", default: 0, null: false
     t.string "notes", default: "0", null: false
+    t.integer "instance_id"
+    t.integer "job_id"
+    t.boolean "queue_outlier", default: false, null: false
+    t.boolean "duration_outlier", default: false, null: false
+    t.boolean "xp_outlier", default: false, null: false
     t.integer "roulette_id"
   end
 

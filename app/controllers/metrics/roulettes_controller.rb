@@ -45,31 +45,41 @@ class Metrics::RoulettesController < ApplicationController
   # https://jsfiddle.net/TLAV8/
   def queue_time
     options = { duration_outlier: false, roulette_id: Roulette.all.pluck(:id) }
-    selector = ->(e) { e.minutes_to_queue_pop }
-    grouper = ->(e) { e.job.role.name }
-    sub_grouper = ->(e) { e.roulette.name }
-    @table_data = table_data(options, selector, grouper, sub_grouper)
-    @subgroup_columns = Role.all.map do |role|
-      Roulette.all.map do |roulette|
-        { group: role.name, subgroup: roulette.name }
-      end
-    end.flatten
-
     @table_data = InstanceEntry.where(options).all.map do |ie|
       {
         role: ie.job.role.name,
         roulette: ie.roulette.name,
         queue_time: ie.minutes_to_queue_pop,
-        level: ie.start_level 
+        level: ie.start_level
       }
     end
+  end
 
-    @roulette_count = Roulette.count
-    @chart_data = chart_data(options, selector, grouper, sub_grouper)
-  end
   def total_time
+    options = { duration_outlier: false, roulette_id: Roulette.all.pluck(:id) }
+    @table_data = InstanceEntry.where(options).all.map do |ie|
+      {
+        role: ie.job.role.name,
+        roulette: ie.roulette.name,
+        queue_time: ie.minutes_to_queue_pop,
+        instance_time: ie.minutes_in_instance,
+        level: ie.start_level
+      }
+    end
   end
+
   def roulette_efficiency
+    options = { duration_outlier: false, roulette_id: Roulette.all.pluck(:id) }
+    @table_data = InstanceEntry.where(options).all.map do |ie|
+      {
+        role: ie.job.role.name,
+        roulette: ie.roulette.name,
+        queue_time: ie.minutes_to_queue_pop,
+        instance_time: ie.minutes_in_instance,
+        xp: combat_and_bonus_xp,
+        level: ie.start_level
+      }
+    end
   end
 
   private

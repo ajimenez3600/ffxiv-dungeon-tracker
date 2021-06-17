@@ -11,6 +11,8 @@ Rails.application.routes.draw do
         get :total_xp
         get :instance_time
         get :queue_time
+        get :total_time
+        get :roulette_efficiency
       end
     end
     resources :roulette_calculator, only: [:new, :create]  do

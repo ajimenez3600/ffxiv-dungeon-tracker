@@ -1,6 +1,6 @@
 <% javascript_pack_tag 'metrics/roulettes/metrics_graph' %>
 <% stylesheet_pack_tag 'metrics/roulettes/metrics_graph' %>
-<% content_for :title, 'Roulette Queue Time by Role, Roulette, and Level' %>
+<% content_for :title, 'Roulette Total Time by Role, Roulette, and Level' %>
 <h1><%= yield(:title) %></h1>
 
 <b-container fluid id='pivot-table'>
@@ -18,7 +18,7 @@
       fieldsOrder: {},
     }"
     :reducer="(accumulator, item, index, array) => {
-      var sum = accumulator + item.queue_time;
+      var sum = accumulator + item.queue_time + item.instance_time;
       return (index == array.length - 1) ? (sum / array.length) : sum;
     }"
   >
