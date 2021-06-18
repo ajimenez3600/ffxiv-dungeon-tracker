@@ -74,41 +74,41 @@
       </b-form-row>
       <b-form-row>
         <label for="finish_time">Finish Time</label>
-        <b-form-input required id="finish_time" name='finish_time' type="datetime-local" />
+        <b-form-input required id="finish_time" type="datetime-local" v-model='finishTime' />
       </b-form-row>
       <b-form-row>
         <b-col cols=6>
           <label for="finish_level">Finish Level</label>
-          <b-form-input required id="finish_level" name='finish_level' type="number" />
+          <b-form-input required id="finish_level" type="number" v-model='finishLevel' />
         </b-col>
         <b-col cols=6>
           <label for="finish_xp">Finish XP</label>
-          <b-form-input required id="finish_xp" name='finish_xp' type="number">
+          <b-form-input required id="finish_xp" type="number" v-model='finishXp'>
         </b-col>
       </b-form-row>
       <b-form-row>
         <label for="xp_bonus">XP Bonus %</label>
-        <b-form-input id="xp_bonus" name='xp_bonus' type="number" />
+        <b-form-input id="xp_bonus" type="number" v-model='xpBonusPercent' />
       </b-form-row>
       <b-form-row>
         <label for="roulette_bonus">Roulette Bonus XP</label>
-        <b-form-input id="roulette_bonus" name='roulette_bonus' type="number" />
+        <b-form-input id="roulette_bonus" type="number" v-model='rouletteBonus' />
       </b-form-row>
       <b-form-row>
         <label for="new_player_bonus">New Player Bonus XP</label>
-        <b-form-input id="new_player_bonus" name='new_player_bonus' type="number" />
+        <b-form-input id="new_player_bonus" type="number" v-model='newPlayerBonus' />
       </b-form-row>
       <b-form-row>
         <label for="role_in_need_bonus">Role in Need Bonus XP</label>
-        <b-form-input id="role_in_need_bonus" name='role_in_need_bonus' type="number" />
+        <b-form-input id="role_in_need_bonus" type="number" v-model='roleInNeedBonus' />
       </b-form-row>
       <b-form-row>
         <label for="other_bonus">Other Bonus XP</label>
-        <b-form-input id="other_bonus" name='other_bonus' type="number" />
+        <b-form-input id="other_bonus" type="number" v-model='otherBonus' />
       </b-form-row>
       <b-form-row>
         <label for="commends">Commends Received</label>
-        <b-form-input id="commends" name='commends' type="number" />
+        <b-form-input id="commends" type="number" v-model='commends' />
       </b-form-row>
       <b-form-row>
         <div role="group" tabindex="-1" class="bv-no-focus-ring">
