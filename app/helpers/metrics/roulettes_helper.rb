@@ -1,6 +1,6 @@
 module Metrics::RoulettesHelper
   def table_data(where_options, selector, grouper = ->(e) { e.roulette.name }, sub_grouper = nil)
-    entries = InstanceEntry.where(where_options).map do |data|
+    entries = InstanceEntry.where(where_options).select { |x| x.patch_divider > Rails.application.config.min_patch_divider }.map do |data|
       { data: data, value: selector.call(data) }
     end
     levels.map do |level|
@@ -21,7 +21,7 @@ module Metrics::RoulettesHelper
   end
 
   def chart_data(where_options, selector, x_grouper = ->(e) { e.roulette.name }, graph_grouper = -> (e) { 1 })
-    entries = InstanceEntry.where(where_options).map do |data|
+    entries = InstanceEntry.where(where_options).select { |x| x.patch_divider > Rails.application.config.min_patch_divider }.map do |data|
       { data: data, value: selector.call(data) }
     end
     graphs = entries.group_by { |e| graph_grouper.call(e[:data]) }
