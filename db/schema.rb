@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_14_020317) do
+ActiveRecord::Schema.define(version: 2022_01_14_050130) do
 
   create_table "expansions", force: :cascade do |t|
     t.string "name"
@@ -42,7 +42,7 @@ ActiveRecord::Schema.define(version: 2022_01_14_020317) do
     t.boolean "duration_outlier", default: false, null: false
     t.boolean "xp_outlier", default: false, null: false
     t.integer "roulette_id"
-    t.decimal "patch_divider", precision: 10, scale: 2, default: 5.0, null: false
+    t.decimal "patch_divider", precision: 5, scale: 2, default: "5.55", null: false
   end
 
   create_table "instances", force: :cascade do |t|
