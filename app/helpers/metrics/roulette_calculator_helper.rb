@@ -53,7 +53,7 @@ module Metrics::RouletteCalculatorHelper
   end
 
   def get_xp_for_roulette(roulette, start_level)
-    entries = InstanceEntry.where(start_level: start_level, roulette: roulette, xp_outlier: false).select { |x| x.patch_divider > Rails.application.config.min_patch_divider }
+    entries = InstanceEntry.where(start_level: start_level, roulette: roulette, xp_outlier: false).select { |x| x.patch_divider >= Rails.application.config.min_patch_divider }
     return 0 if entries.count == 0
 
     entries.sum { |e| e.bonus_xp + e.combat_xp } / entries.count

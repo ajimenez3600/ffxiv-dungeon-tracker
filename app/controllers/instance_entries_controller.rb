@@ -13,6 +13,7 @@ class InstanceEntriesController < ApplicationController
     @instance_entry.job = Job.find_by_name(params[:job_name])
     @instance_entry.roulette = Roulette.find_by_name(params[:roulette_name]) if params[:roulette_name].present?
     @instance_entry.patch_number = Rails.application.config.patch_number
+    @instance_entry.lune_tracker = request.remote_ip
 
     @instance_entry.xp_bonus ||= 0
     @instance_entry.roulette_bonus ||= 0
