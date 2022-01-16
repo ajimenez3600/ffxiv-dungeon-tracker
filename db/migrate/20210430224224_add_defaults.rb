@@ -1,8 +1,5 @@
 class AddDefaults < ActiveRecord::Migration[6.1]
   def change
-    remove_column :instance_entries, :instance_name,  :string
-    remove_column :instance_entries, :job_name,       :string
-
     change_column :instance_entries, :start_level,   :integer,  null: false
     change_column :instance_entries, :start_xp,      :integer,  null: false
     change_column :instance_entries, :finish_level,  :integer,  null: false

@@ -12,6 +12,8 @@ class InstanceEntriesController < ApplicationController
     @instance_entry.instance = Instance.find_by_name(params[:instance_name])
     @instance_entry.job = Job.find_by_name(params[:job_name])
     @instance_entry.roulette = Roulette.find_by_name(params[:roulette_name]) if params[:roulette_name].present?
+    @instance_entry.patch_number = Rails.application.config.patch_number
+    @instance_entry.lune_tracker = request.remote_ip
 
     @instance_entry.queue_outlier = params[:outliers].include?('queue_outlier')
     @instance_entry.duration_outlier = params[:outliers].include?('duration_outlier')
