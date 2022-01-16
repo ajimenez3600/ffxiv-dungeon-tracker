@@ -7,8 +7,9 @@ Vue.use(IconsPlugin)
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import '@fortawesome/fontawesome-free/css/all.css'
 
-import RouletteXpCalculator from '../components/RouletteXpCalculator'
+//import RouletteXpCalculator from '../components/RouletteXpCalculator'
 import InstanceEntriesNewView from '../views/instance_entries/new.vue'
 import { Pivot } from 'vue-pivot-table-plus';
 

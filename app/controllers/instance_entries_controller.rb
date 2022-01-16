@@ -9,9 +9,13 @@ class InstanceEntriesController < ApplicationController
 
   def create
     @instance_entry = InstanceEntry.new(instance_entry_params)
-    @instance_entry.instance = Instance.find_by_name(params[:instance_selection])
+    @instance_entry.instance = Instance.find_by_name(params[:instance_name])
     @instance_entry.job = Job.find_by_name(params[:job_name])
     @instance_entry.roulette = Roulette.find_by_name(params[:roulette_name]) if params[:roulette_name].present?
+
+    @instance_entry.queue_outlier = params[:outliers].include?('queue_outlier')
+    @instance_entry.duration_outlier = params[:outliers].include?('duration_outlier')
+    @instance_entry.xp_outlier = params[:outliers].include?('xp_outlier')
 
     @instance_entry.xp_bonus ||= 0
     @instance_entry.roulette_bonus ||= 0
@@ -49,9 +53,6 @@ class InstanceEntriesController < ApplicationController
       :role_in_need_bonus,
       :other_bonus,
       :commends,
-      :queue_outlier,
-      :duration_outlier,
-      :xp_outlier,
       :notes
     )
   end
@@ -67,7 +68,7 @@ class InstanceEntriesController < ApplicationController
           instances = Instance
             .where(instance_type: instance_type, expansion_id: expansion.id)
             .order(required_level: :asc, required_item_level: :asc, name: :asc)
-            map(&:name)
+            .map(&:name)
           expansion_group[expansion.name] = instances if instances.count > 0
         end
         group[instance_type] = expansion_group

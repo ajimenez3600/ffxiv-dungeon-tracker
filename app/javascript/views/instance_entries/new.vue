@@ -1,41 +1,87 @@
 <template>
-<section>
-  <b-form method="POST" action="/instance_entries">
+<b-container fluid>
+  <b-form @submit=onSubmit>
     <section id="pre-instance">
       <b-form-row>
         <h3>Pre-Instance</h3>
       </b-form-row>
       <b-form-row>
-        <label for="start_time">Start Time</label>
-        <b-form-input required id="start_time" type="datetime-local" v-model="form.startTime" />
+        <label for="start_time">
+          Start Time (*)
+          <b-btn class='borderless' size=sm v-b-popover.hover.top="'The time you entered queue'">
+            <i class='fas fa-question-circle'></i>
+          </b-btn>
+        </label>
+        <b-input-group>
+          <b-form-input id="start_time" type="datetime-local" required v-model="form.start_time" />
+          <b-input-group-append>
+            <b-btn variant=secondary @click="form.start_time = getCurrentDateTime()">Set Now</b-btn>
+          </b-input-group-append>
+        </b-input-group>
       </b-form-row>
       <b-form-row>
-        <label for="roulette_name">Roulette Name</label>
-        <b-form-select id="roulette_name" options="roulettes" v-model="form.rouletteName" />
+        <label for="roulette_name">
+          Roulette Name
+          <b-btn class='borderless' size=sm v-b-popover.hover.top="'Which roulette you\'re running, don\'t select an option if you\'re not running a roulette'">
+            <i class='fas fa-question-circle'></i>
+          </b-btn>
+        </label>        
+        <b-form-select id="roulette_name" :options="roulettes" v-model="form.roulette_name" />
       </b-form-row>
       <b-form-row>
-        <label for="job_name">Job Name</label>
-        <b-form-select required id="job_name" :options="jobs" v-model="form.jobName" />
+        <label for="job_name">
+          Job Name (*)
+          <b-btn class='borderless' size=sm v-b-popover.hover.top="'What job are you running as? This is used for calculating queue time based on role.'">
+            <i class='fas fa-question-circle'></i>
+          </b-btn>
+        </label>
+        <b-form-select id="job_name" :options="jobs" required v-model="form.job_name" />
       </b-form-row>
       <b-form-row>
         <b-col cols=6>
-          <label for="start_level">Starting Level</label>
-          <b-form-input required id="start_level" type="number" v-model="form.startLevel" />
+          <label for="start_level">
+            Starting Level (*)
+            <b-btn class='borderless' size=sm v-b-popover.hover.top="'Your level at the time of entering the instance'">
+              <i class='fas fa-question-circle'></i>
+            </b-btn>
+          </label>
+          <b-form-input id="start_level" type="number" required min=1 v-model="form.start_level" />
         </b-col>
         <b-col cols=6>
-          <label for="start_xp">Starting XP</label>
-          <b-form-input required id="start_xp" type="number" v-model="form.startXp" />
+          <label for="start_xp">
+            Starting XP (*)
+            <b-btn class='borderless' size=sm v-b-popover.hover.top="'Your experience in excess of your start level (what it says on your experience bar)'">
+              <i class='fas fa-question-circle'></i>
+            </b-btn>
+          </label>
+          <b-form-input id="start_xp" type="number" required min=0 v-model="form.start_xp" />
         </b-col>
       </b-form-row>
       <b-form-row>
-        <label for="queue_pop_time">Queue Pop Time</label>
-        <b-form-input required id="queue_pop_time" type="datetime-local" v-model="form.queuePopTime" />
+        <label for="queue_pop_time">
+          Queue Pop Time (*)
+          <b-btn class='borderless' size=sm v-b-popover.hover.top="'The time you got your queue pop. If you have to re-enter queue, the time of your last queue pop.'">
+            <i class='fas fa-question-circle'></i>
+          </b-btn>
+        </label>
+        <b-input-group>
+          <b-form-input id="queue_pop_time" type="datetime-local" required v-model="form.queue_pop_time" />
+          <b-input-group-append>
+            <b-btn variant=secondary @click="form.queue_pop_time = getCurrentDateTime()">Set Now</b-btn>
+          </b-input-group-append>
+        </b-input-group>
+        <div class='form-warning' v-if="longQueue">
+          It looks like you spent more than 2 hours in queue, is that right?
+        </div>
       </b-form-row>
     </section>
 
-    <section>
+    <section id="instance">
       <b-form-row>
-        <h3>Instance</h3>
+        <h3>Instance (*)</h3>
+        <b-btn class='borderless' size=sm v-b-popover.hover.top="'What instance did you get?'">
+          <i class='fas fa-question-circle'></i>
+        </b-btn>
       </b-form-row>
       <div class='accordion' role=tablist>
         <b-card no-body class='mb-1' v-for='key in Object.keys(instances)' :key='key'>
@@ -56,95 +102,159 @@
           </b-card-header>
           <b-collapse v-if='instances[key] instanceof Array' :id='key' accordion='instances-accordion' role='tabpanel'>
             <b-card-body>
-              <b-form-radio-group required :options='instances[key]' stacked size='sm' />
+              <b-form-radio-group :options='instances[key]' stacked size='sm' v-model="form.instance_name" />
             </b-card-body>
           </b-collapse>
           <b-collapse v-else v-for='key2 in Object.keys(instances[key])' :key="key2" :id="key + ' ' + key2" accordion='instances-accordion' role='tabpanel'>
             <b-card-body>
-              <b-form-radio-group required :options='instances[key][key2]' stacked size='sm' />
+              <b-form-radio-group :options='instances[key][key2]' stacked size='sm' v-model="form.instance_name" />
             </b-card-body>
           </b-collapse>
         </b-card>
       </div>
     </section>
 
-    <section id='instance'>
+    <section id='post-instance'>
       <b-form-row>
         <h3>Post-Instance</h3>
       </b-form-row>
       <b-form-row>
-        <label for="finish_time">Finish Time</label>
-        <b-form-input required id="finish_time" type="datetime-local" v-model='finishTime' />
-      </b-form-row>
-      <b-form-row>
-        <b-col cols=6>
-          <label for="finish_level">Finish Level</label>
-          <b-form-input required id="finish_level" type="number" v-model='finishLevel' />
-        </b-col>
-        <b-col cols=6>
-          <label for="finish_xp">Finish XP</label>
-          <b-form-input required id="finish_xp" type="number" v-model='finishXp'>
-        </b-col>
-      </b-form-row>
-      <b-form-row>
-        <label for="xp_bonus">XP Bonus %</label>
-        <b-form-input id="xp_bonus" type="number" v-model='xpBonusPercent' />
-      </b-form-row>
-      <b-form-row>
-        <label for="roulette_bonus">Roulette Bonus XP</label>
-        <b-form-input id="roulette_bonus" type="number" v-model='rouletteBonus' />
-      </b-form-row>
-      <b-form-row>
-        <label for="new_player_bonus">New Player Bonus XP</label>
-        <b-form-input id="new_player_bonus" type="number" v-model='newPlayerBonus' />
-      </b-form-row>
-      <b-form-row>
-        <label for="role_in_need_bonus">Role in Need Bonus XP</label>
-        <b-form-input id="role_in_need_bonus" type="number" v-model='roleInNeedBonus' />
-      </b-form-row>
-      <b-form-row>
-        <label for="other_bonus">Other Bonus XP</label>
-        <b-form-input id="other_bonus" type="number" v-model='otherBonus' />
-      </b-form-row>
-      <b-form-row>
-        <label for="commends">Commends Received</label>
-        <b-form-input id="commends" type="number" v-model='commends' />
-      </b-form-row>
-      <b-form-row>
-        <div role="group" tabindex="-1" class="bv-no-focus-ring">
-          <div class="custom-control custom-checkbox">
-            <b-form-input type="checkbox" name='queue_outlier' class="custom-control-b-form-input" value="Are you queueing with someone?" id="option-0">
-            <label class="custom-control-label" for="option-0">
-              <span>Are you queueing with someone?</span>
-            </label>
-          </div>
-          <div class="custom-control custom-checkbox">
-            <b-form-input type="checkbox" name='duration_outlier' class="custom-control-b-form-input" value="Did you join an in-prog?" id="option-1">
-            <label class="custom-control-label" for="option-1">
-              <span>Did you join an in-prog?</span>
-            </label>
-          </div>
-          <div class="custom-control custom-checkbox">
-            <b-form-input type="checkbox" name='xp_outlier' class="custom-control-b-form-input" value="Did you hit level cap (or were at cap before starting)?" id="option-2">
-            <label class="custom-control-label" for="option-2">
-              <span>Did you hit level cap (or were at cap before starting)?</span>
-            </label>
-          </div>
+        <label for="finish_time">
+          Finish Time (*)
+          <b-btn class='borderless' size=sm v-b-popover.hover.top="'The time you exited the dungeon'">
+            <i class='fas fa-question-circle'></i>
+          </b-btn>
+        </label>
+          <b-input-group>
+            <b-form-input id="finish_time" type="datetime-local" required v-model='form.finish_time' />
+          <b-input-group-append>
+            <b-btn variant=secondary @click="form.finish_time = getCurrentDateTime()">Set Now</b-btn>
+          </b-input-group-append>
+        </b-input-group>
+        <div v-if='longInstance' class='form-warning'>
+          It looks like you spent more than 2 hours in the instance, is that right?
         </div>
+      </b-form-row>
+      <b-form-row>
+        <b-col cols=6>
+          <label for="finish_level">
+            Finish Level (*)
+            <b-btn class='borderless' size=sm v-b-popover.hover.top="'Your level at the time of exiting the dungeon'">
+              <i class='fas fa-question-circle'></i>
+            </b-btn>
+          </label>
+          <b-form-input id="finish_level" type="number" min=1 required v-model='form.finish_level' />
+        </b-col>
+        <b-col cols=6>
+          <label for="finish_xp">
+            Finish XP (*)
+            <b-btn class='borderless' size=sm v-b-popover.hover.top="'Your experience in excess of your level at the time of exiting the dungeon (what it says on your experience bar)'">
+              <i class='fas fa-question-circle'></i>
+            </b-btn>
+          </label>
+          <b-form-input id="finish_xp" type="number" min=0 required v-model='form.finish_xp' />
+        </b-col>
+      </b-form-row>
+      <b-form-row>
+        <label for="xp_bonus">
+          XP Bonus %
+          <b-btn class='borderless' size=sm v-b-popover.hover.top="'The total experience bonus percent while you were in the dungeon. This will show up as a (+xxx%) every time you gain experience.'">
+            <i class='fas fa-question-circle'></i>
+          </b-btn>
+        </label>
+        <b-form-input id="xp_bonus" type="number" v-model='form.xp_bonus' />
+      </b-form-row>
+      <b-form-row v-if="!!form.roulette_name">
+        <label for="roulette_bonus">
+          Roulette Bonus XP
+          <b-btn class='borderless' size=sm v-b-popover.hover.top="'The experience you gained as a reward for participating in duty roulette'">
+            <i class='fas fa-question-circle'></i>
+          </b-btn>
+        </label>
+        <b-form-input id="roulette_bonus" type="number" v-model='form.roulette_bonus' />
+      </b-form-row>
+      <b-form-row>
+        <label for="new_player_bonus">
+          New Player Bonus XP
+          <b-btn class='borderless' size=sm v-b-popover.hover.top="'The experience you gained for swift first-time completion of duty objectives'">
+            <i class='fas fa-question-circle'></i>
+          </b-btn>
+        </label>
+        <b-form-input id="new_player_bonus" type="number" v-model='form.new_player_bonus' />
+      </b-form-row>
+      <b-form-row>
+        <label for="role_in_need_bonus">
+          Role in Need Bonus XP
+          <b-btn class='borderless' size=sm v-b-popover.hover.top="'The experience you gained as a reward for being an adventurer-in-need'">
+            <i class='fas fa-question-circle'></i>
+          </b-btn>
+        </label>
+        <b-form-input id="role_in_need_bonus" type="number" v-model='form.role_in_need_bonus' />
+      </b-form-row>
+      <b-form-row>
+        <label for="other_bonus">
+          Other Bonus XP
+          <b-btn class='borderless' size=sm v-b-popover.hover.top="'Otherflat bonus XP bonuses. An example of this would be completing a challenge in the challenge log'">
+            <i class='fas fa-question-circle'></i>
+          </b-btn>
+        </label>
+        <b-form-input id="other_bonus" type="number" v-model='form.other_bonus' />
+      </b-form-row>
+      <b-form-row>
+        <label for="commends">
+          Commends Received
+          <b-btn class='borderless' size=sm v-b-popover.hover.top="'I don\'t actually have a use for this data at time of writing, I\'m just interested.'">
+            <i class='fas fa-question-circle'></i>
+          </b-btn>
+        </label>
+        <b-form-input id="commends" type="number" v-model='form.commends' />
+      </b-form-row>
+      <b-form-row>
+        <b-input-group>
+          <b-form-checkbox-group stacked v-model='form.outliers'>
+            <b-form-checkbox value='queue_outlier'>
+              Are you queuing with someone?
+              <b-btn class='borderless' size=sm v-b-popover.hover.top="'Were you in a party when you queued? This will cause your queue time to not be weighed as heavily'">
+                <i class='fas fa-question-circle'></i>
+              </b-btn>
+            </b-form-checkbox>
+            <b-form-checkbox value='duration_outlier'>
+              Did you join an in-progress group?
+              <b-btn class='borderless' size=sm v-b-popover.hover.top="'Was the group you joined already partially done with the instance? This will cause your instance duration to not be counted.'">
+                <i class='fas fa-question-circle'></i>
+              </b-btn>
+            </b-form-checkbox>
+            <b-form-checkbox value='xp_outlier'>
+              Did you hit level cap (or were at level cap before starting)?
+              <b-btn class='borderless' size=sm v-b-popover.hover.top="'Were you at max level at the time of exiting the dungeon? This will cause your experience gain to not be weighed as heavily.'">
+                <i class='fas fa-question-circle'></i>
+              </b-btn>
+            </b-form-checkbox>            
+          </b-form-checkbox-group>
+        </b-input-group>
       </b-form-row>      
       <b-form-row>
-        <label for="notes">Notes</label>
-        <b-form-input id="notes" name='notes' />
+        <label for="notes">
+          Notes
+          <b-btn class='borderless' size=sm v-b-popover.hover.top="'Miscellany. This will not be displayed anywhere else on the site.'">
+            <i class='fas fa-question-circle'></i>
+          </b-btn>
+        </label>
+        <b-form-input id="notes" name='notes' v-model='form.notes' />
       </b-form-row>
     </section>
 
-    <b-button class="my-3" variant=info type=submit>Submit</b-button>
+    <b-button class="my-3" variant=info type="submit" :disabled="!isValid" v-b-popover.hover.right="'Thank you!'">
+      Submit
+    </b-button>
   </b-form>
-</section>
+</b-container>
 </template>
 
 <script>
 import CSRF from 'components/shared/csrf.vue';
+import moment from 'moment';
+import axios from 'axios';
 
 export default {
   components: {
@@ -163,32 +273,95 @@ export default {
       type: Array,
       default: () => [],
     },
+    csrf: {
+      type: String,
+      default: () => '',
+    },
   },
   data() {
     return {
       form: {
-        startTime,
-        rouletteName,
-        jobName,
-        startingLevel,
-        startingXp,
-        queuePopTime,
-        instanceName,
-        finishTime,
-        finishLevel,
-        finishXp,
-        xpBonusPercent,
-        rouletteBonus,
-        newPlayerBonus,
-        roleInNeedBonus,
-        otherBonus,
-        commends,
+        start_time: undefined,
+        roulette_name: undefined,
+        job_name: undefined,
+        start_level: undefined,
+        start_xp: undefined,
+        queue_pop_time: undefined,
+        instance_name: undefined,
+        finish_time: undefined,
+        finish_level: undefined,
+        finish_xp: undefined,
+        xp_bonus: undefined,
+        roulette_bonus: undefined,
+        new_player_bonus: undefined,
+        role_in_need_bonus: undefined,
+        other_bonus: undefined,
+        commends: undefined,
+        notes: undefined,
         outliers: [ ]
       }
     };
   },
+  computed: {
+    longQueue() {
+      if (!this.form.queue_pop_time || !this.form.start_time) {
+        return false;
+      }
+      else {
+        return Math.abs(moment(this.form.queue_pop_time).diff(moment(this.form.start_time), 'hours')) > 2
+      }
+    },
+    longInstance() {
+      if (!this.form.queue_pop_time || !this.form.finish_time) {
+        return false;
+      }
+      else {
+        return Math.abs(moment(this.form.finish_time).diff(moment(this.form.queue_pop_time), 'hours')) > 2
+      }
+    },
+    isValid() {
+      return !!this.form.instance_name
+    },
+  },
+  methods: {
+    getCurrentDateTime() {
+      return moment().format()
+    },
+    onSubmit(event) {
+      event.preventDefault();
+
+      if (!!this.form.roulette_name) {
+        this.form.roulette_bonus = 0;
+      }
+      this.form.utf8 = '✓';
+      this.form.authenticity_token = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+
+      axios({
+        method: 'POST',
+        url: '/instance_entries',
+        headers: {
+          'Conten-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+        data: this.form
+      })
+    }
+  }
 };
 </script>
 
 <style scoped>
+.borderless {
+  color: #000;
+  background-color: transparent;
+  border-color: transparent;
+  padding: 0px;
+  margin: 0px;
+}
+.form-warning {
+  margin-top: 0.25rem;
+  font-size: 80%;
+  color: #dc3545;
+  width: 100%;
+}
 </style>
