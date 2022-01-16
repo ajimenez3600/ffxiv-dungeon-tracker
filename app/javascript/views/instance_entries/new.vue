@@ -1,5 +1,8 @@
 <template>
 <b-container fluid>
+  <b-alert :variant="alert.variant" :show="alert.dismissCountdown" dismissible @dismissed="alert.dismissCountdown=0" @dismiss-count-down="countdownChanged">
+    {{alert.message}}
+  </b-alert>
   <b-form @submit=onSubmit>
     <section id="pre-instance">
       <b-form-row>
@@ -71,7 +74,10 @@
           </b-input-group-append>
         </b-input-group>
         <div class='form-warning' v-if="longQueue">
-          It looks like you spent more than 2 hours in queue, is that right?
+          It looks like you spent {{checkLongDuration(form.start_time, form.queue_pop_time)}} hours in queue, is that right?
+        </div>
+        <div v-if='negativeQueue' class='form-warning'>
+          You seem to have been queued for a negative amount of time. Please take another look.
         </div>
       </b-form-row>
     </section>
@@ -132,7 +138,10 @@
           </b-input-group-append>
         </b-input-group>
         <div v-if='longInstance' class='form-warning'>
-          It looks like you spent more than 2 hours in the instance, is that right?
+          It looks like you spent more than {{checkLongDuration(form.queue_pop_time, form.finish_time)}} hours in the instance, is that right?
+        </div>
+        <div v-if='negativeInstance' class='form-warning'>
+          You seem to have been in the instance for a negative amount of time. Please take another look.
         </div>
       </b-form-row>
       <b-form-row>
@@ -280,7 +289,33 @@ export default {
   },
   data() {
     return {
-      form: {
+      form: { },
+      alert: { },
+    };
+  },
+  computed: {
+    longQueue() {
+      return this.checkLongDuration(this.form.start_time, this.form.queue_pop_time) > 2
+    },
+    negativeQueue() {
+      return this.checkLongDuration(this.form.start_time, this.form.queue_pop_time) < 0
+    },
+    longInstance() {
+      return this.checkLongDuration(this.form.queue_pop_time, this.form.finish_time) > 2
+    },
+    negativeInstance() {
+      return this.checkLongDuration(this.form.queue_pop_time, this.form.finish_time) < 0
+    },
+    isValid() {
+      return !!this.form.instance_name
+    },
+  },
+  mounted() {
+    this.resetForm()
+  },
+  methods: {
+    resetForm() {
+      this.form = {
         start_time: undefined,
         roulette_name: undefined,
         job_name: undefined,
@@ -299,33 +334,20 @@ export default {
         commends: undefined,
         notes: undefined,
         outliers: [ ]
-      }
-    };
-  },
-  computed: {
-    longQueue() {
-      if (!this.form.queue_pop_time || !this.form.start_time) {
-        return false;
-      }
-      else {
-        return Math.abs(moment(this.form.queue_pop_time).diff(moment(this.form.start_time), 'hours')) > 2
-      }
+      };
     },
-    longInstance() {
-      if (!this.form.queue_pop_time || !this.form.finish_time) {
-        return false;
-      }
-      else {
-        return Math.abs(moment(this.form.finish_time).diff(moment(this.form.queue_pop_time), 'hours')) > 2
-      }
-    },
-    isValid() {
-      return !!this.form.instance_name
-    },
-  },
-  methods: {
     getCurrentDateTime() {
-      return moment().format()
+      return moment().format('YYYY-MM-DDTHH:mm')
+    },
+    checkLongDuration(start, end) {
+      if (!start || !end) {
+        return false;
+      }
+      else {
+        let start_parsed = moment(start, 'YYYY-MM-DDTHH:mm')
+        let end_parsed = moment(end, 'YYYY-MM-DDTHH:mm')
+        return end_parsed.diff(start_parsed, 'hours')
+      }
     },
     onSubmit(event) {
       event.preventDefault();
@@ -344,7 +366,33 @@ export default {
           'X-Requested-With': 'XMLHttpRequest',
         },
         data: this.form
+      }).then(() => {
+        this.resetForm();
+        window.scrollTo(0,0);
+        this.showSuccess();
+      }).catch(error => {
+        console.error(error);
+        this.showError(error);
       })
+    },
+    showError() {
+      this.alert = {
+        variant: 'danger',
+        show: true,
+        dismissCountdown: 10,
+        message: 'Something messed up, details have been logged to the console, but if the error persists, please contact me!'
+      }
+    },
+    showSuccess() {
+      this.alert = {
+        variant: 'success',
+        show: true,
+        dismissCountdown: 10,
+        message: 'Data submitted successfully, thank you!'
+      }
+    },
+    countdownChanged(dismissCountdown) {
+      this.alert.dismissCountdown = dismissCountdown;
     }
   }
 };
