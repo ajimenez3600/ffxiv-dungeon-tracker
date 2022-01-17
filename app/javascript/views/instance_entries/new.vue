@@ -11,7 +11,7 @@
       <b-form-row>
         <label for="start_time">
           Start Time (*)
-          <b-btn class='borderless' size=sm v-b-popover.hover.top="'The time you entered queue'">
+          <b-btn class='borderless' size=sm tabindex=-1 v-b-popover.hover.top="'The time you entered queue'">
             <i class='fas fa-question-circle'></i>
           </b-btn>
         </label>
@@ -25,7 +25,7 @@
       <b-form-row>
         <label for="roulette_name">
           Roulette Name
-          <b-btn class='borderless' size=sm v-b-popover.hover.top="'Which roulette you\'re running, don\'t select an option if you\'re not running a roulette'">
+          <b-btn class='borderless' size=sm tabindex=-1 v-b-popover.hover.top="'Which roulette you\'re running, don\'t select an option if you\'re not running a roulette'">
             <i class='fas fa-question-circle'></i>
           </b-btn>
         </label>        
@@ -34,7 +34,7 @@
       <b-form-row>
         <label for="job_name">
           Job Name (*)
-          <b-btn class='borderless' size=sm v-b-popover.hover.top="'What job are you running as? This is used for calculating queue time based on role.'">
+          <b-btn class='borderless' size=sm tabindex=-1 v-b-popover.hover.top="'What job are you running as? This is used for calculating queue time based on role.'">
             <i class='fas fa-question-circle'></i>
           </b-btn>
         </label>
@@ -44,7 +44,7 @@
         <b-col cols=6>
           <label for="start_level">
             Starting Level (*)
-            <b-btn class='borderless' size=sm v-b-popover.hover.top="'Your level at the time of entering the instance'">
+            <b-btn class='borderless' size=sm tabindex=-1 v-b-popover.hover.top="'Your level at the time of entering the instance'">
               <i class='fas fa-question-circle'></i>
             </b-btn>
           </label>
@@ -53,7 +53,7 @@
         <b-col cols=6>
           <label for="start_xp">
             Starting XP (*)
-            <b-btn class='borderless' size=sm v-b-popover.hover.top="'Your experience in excess of your start level (what it says on your experience bar)'">
+            <b-btn class='borderless' size=sm tabindex=-1 v-b-popover.hover.top="'Your experience in excess of your start level (what it says on your experience bar)'">
               <i class='fas fa-question-circle'></i>
             </b-btn>
           </label>
@@ -63,7 +63,7 @@
       <b-form-row>
         <label for="queue_pop_time">
           Queue Pop Time (*)
-          <b-btn class='borderless' size=sm v-b-popover.hover.top="'The time you got your queue pop. If you have to re-enter queue, the time of your last queue pop.'">
+          <b-btn class='borderless' size=sm tabindex=-1 v-b-popover.hover.top="'The time you got your queue pop. If you have to re-enter queue, the time of your last queue pop.'">
             <i class='fas fa-question-circle'></i>
           </b-btn>
         </label>
@@ -85,7 +85,7 @@
     <section id="instance">
       <b-form-row>
         <h3>Instance (*)</h3>
-        <b-btn class='borderless' size=sm v-b-popover.hover.top="'What instance did you get?'">
+        <b-btn class='borderless' size=sm tabindex=-1 v-b-popover.hover.top="'What instance did you get?'">
           <i class='fas fa-question-circle'></i>
         </b-btn>
       </b-form-row>
@@ -127,7 +127,7 @@
       <b-form-row>
         <label for="finish_time">
           Finish Time (*)
-          <b-btn class='borderless' size=sm v-b-popover.hover.top="'The time you exited the dungeon'">
+          <b-btn class='borderless' size=sm tabindex=-1 v-b-popover.hover.top="'The time you exited the dungeon'">
             <i class='fas fa-question-circle'></i>
           </b-btn>
         </label>
@@ -148,7 +148,7 @@
         <b-col cols=6>
           <label for="finish_level">
             Finish Level (*)
-            <b-btn class='borderless' size=sm v-b-popover.hover.top="'Your level at the time of exiting the dungeon'">
+            <b-btn class='borderless' size=sm tabindex=-1 v-b-popover.hover.top="'Your level at the time of exiting the dungeon'">
               <i class='fas fa-question-circle'></i>
             </b-btn>
           </label>
@@ -157,7 +157,7 @@
         <b-col cols=6>
           <label for="finish_xp">
             Finish XP (*)
-            <b-btn class='borderless' size=sm v-b-popover.hover.top="'Your experience in excess of your level at the time of exiting the dungeon (what it says on your experience bar)'">
+            <b-btn class='borderless' size=sm tabindex=-1 v-b-popover.hover.top="'Your experience in excess of your level at the time of exiting the dungeon (what it says on your experience bar)'">
               <i class='fas fa-question-circle'></i>
             </b-btn>
           </label>
@@ -167,7 +167,7 @@
       <b-form-row>
         <label for="xp_bonus">
           XP Bonus %
-          <b-btn class='borderless' size=sm v-b-popover.hover.top="'The total experience bonus percent while you were in the dungeon. This will show up as a (+xxx%) every time you gain experience.'">
+          <b-btn class='borderless' size=sm tabindex=-1 v-b-popover.hover.top="'The total experience bonus percent while you were in the dungeon. This will show up as a (+xxx%) every time you gain experience.'">
             <i class='fas fa-question-circle'></i>
           </b-btn>
         </label>
@@ -176,7 +176,7 @@
       <b-form-row v-if="!!form.roulette_name">
         <label for="roulette_bonus">
           Roulette Bonus XP
-          <b-btn class='borderless' size=sm v-b-popover.hover.top="'The experience you gained as a reward for participating in duty roulette'">
+          <b-btn class='borderless' size=sm tabindex=-1 v-b-popover.hover.top="'The experience you gained as a reward for participating in duty roulette'">
             <i class='fas fa-question-circle'></i>
           </b-btn>
         </label>
@@ -185,7 +185,7 @@
       <b-form-row>
         <label for="new_player_bonus">
           New Player Bonus XP
-          <b-btn class='borderless' size=sm v-b-popover.hover.top="'The experience you gained for swift first-time completion of duty objectives'">
+          <b-btn class='borderless' size=sm tabindex=-1 v-b-popover.hover.top="'The experience you gained for swift first-time completion of duty objectives'">
             <i class='fas fa-question-circle'></i>
           </b-btn>
         </label>
@@ -194,7 +194,7 @@
       <b-form-row>
         <label for="role_in_need_bonus">
           Role in Need Bonus XP
-          <b-btn class='borderless' size=sm v-b-popover.hover.top="'The experience you gained as a reward for being an adventurer-in-need'">
+          <b-btn class='borderless' size=sm tabindex=-1 v-b-popover.hover.top="'The experience you gained as a reward for being an adventurer-in-need'">
             <i class='fas fa-question-circle'></i>
           </b-btn>
         </label>
@@ -203,7 +203,7 @@
       <b-form-row>
         <label for="other_bonus">
           Other Bonus XP
-          <b-btn class='borderless' size=sm v-b-popover.hover.top="'Otherflat bonus XP bonuses. An example of this would be completing a challenge in the challenge log'">
+          <b-btn class='borderless' size=sm tabindex=-1 v-b-popover.hover.top="'Otherflat bonus XP bonuses. An example of this would be completing a challenge in the challenge log'">
             <i class='fas fa-question-circle'></i>
           </b-btn>
         </label>
@@ -212,7 +212,7 @@
       <b-form-row>
         <label for="commends">
           Commends Received
-          <b-btn class='borderless' size=sm v-b-popover.hover.top="'I don\'t actually have a use for this data at time of writing, I\'m just interested.'">
+          <b-btn class='borderless' size=sm tabindex=-1 v-b-popover.hover.top="'I don\'t actually have a use for this data at time of writing, I\'m just interested.'">
             <i class='fas fa-question-circle'></i>
           </b-btn>
         </label>
@@ -223,19 +223,19 @@
           <b-form-checkbox-group stacked v-model='form.outliers'>
             <b-form-checkbox value='queue_outlier'>
               Are you queuing with someone?
-              <b-btn class='borderless' size=sm v-b-popover.hover.top="'Were you in a party when you queued? This will cause your queue time to not be weighed as heavily'">
+              <b-btn class='borderless' size=sm tabindex=-1 v-b-popover.hover.top="'Were you in a party when you queued? This will cause your queue time to not be weighed as heavily'">
                 <i class='fas fa-question-circle'></i>
               </b-btn>
             </b-form-checkbox>
             <b-form-checkbox value='duration_outlier'>
               Did you join an in-progress group?
-              <b-btn class='borderless' size=sm v-b-popover.hover.top="'Was the group you joined already partially done with the instance? This will cause your instance duration to not be counted.'">
+              <b-btn class='borderless' size=sm tabindex=-1 v-b-popover.hover.top="'Was the group you joined already partially done with the instance? This will cause your instance duration to not be counted.'">
                 <i class='fas fa-question-circle'></i>
               </b-btn>
             </b-form-checkbox>
             <b-form-checkbox value='xp_outlier'>
               Did you hit level cap (or were at level cap before starting)?
-              <b-btn class='borderless' size=sm v-b-popover.hover.top="'Were you at max level at the time of exiting the dungeon? This will cause your experience gain to not be weighed as heavily.'">
+              <b-btn class='borderless' size=sm tabindex=-1 v-b-popover.hover.top="'Were you at max level at the time of exiting the dungeon? This will cause your experience gain to not be weighed as heavily.'">
                 <i class='fas fa-question-circle'></i>
               </b-btn>
             </b-form-checkbox>            
@@ -245,7 +245,7 @@
       <b-form-row>
         <label for="notes">
           Notes
-          <b-btn class='borderless' size=sm v-b-popover.hover.top="'Miscellany. This will not be displayed anywhere else on the site.'">
+          <b-btn class='borderless' size=sm tabindex=-1 v-b-popover.hover.top="'Miscellany. This will not be displayed anywhere else on the site.'">
             <i class='fas fa-question-circle'></i>
           </b-btn>
         </label>
@@ -253,10 +253,10 @@
       </b-form-row>
     </section>
 
-    <b-button class="my-3" variant=info type="submit" :disabled="!isValid" v-b-popover.hover.right="'Thank you!'" @click="goAgain=false">
+    <b-button class="my-3" variant=info type="submit" :disabled="!isValid" tabindex=-1 v-b-popover.hover.right="'Thank you!'" @click="goAgain=false">
       Submit
     </b-button>
-    <b-button class="my-3" variant=info type="submit" :disabled="!isValid" v-b-popover.hover.right="'Thank you!'" @click="goAgain=true">
+    <b-button class="my-3" variant=info type="submit" :disabled="!isValid" tabindex=-1 v-b-popover.hover.right="'Thank you!'" @click="goAgain=true">
       Submit and Go Again
     </b-button>
   </b-form>
