@@ -311,7 +311,7 @@ export default {
       return this.checkLongDuration(this.form.queue_pop_time, this.form.finish_time) < 0
     },
     isValid() {
-      return !!this.form.instance_name
+      return !!this.form.instance_name && (!this.form.roulette_name || this.form.roulette_bonus > 0)
     },
   },
   mounted() {
@@ -356,7 +356,7 @@ export default {
     onSubmit(event) {
       event.preventDefault();
 
-      if (!!this.form.roulette_name) {
+      if (!this.form.roulette_name) {
         this.form.roulette_bonus = 0;
       }
       this.form.utf8 = '✓';
