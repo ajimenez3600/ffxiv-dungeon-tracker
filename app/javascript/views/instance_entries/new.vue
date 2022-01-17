@@ -253,8 +253,11 @@
       </b-form-row>
     </section>
 
-    <b-button class="my-3" variant=info type="submit" :disabled="!isValid" v-b-popover.hover.right="'Thank you!'">
+    <b-button class="my-3" variant=info type="submit" :disabled="!isValid" v-b-popover.hover.right="'Thank you!'" @click="goAgain=false">
       Submit
+    </b-button>
+    <b-button class="my-3" variant=info type="submit" :disabled="!isValid" v-b-popover.hover.right="'Thank you!'" @click="goAgain=true">
+      Submit and Go Again
     </b-button>
   </b-form>
 </b-container>
@@ -291,6 +294,7 @@ export default {
     return {
       form: { },
       alert: { },
+      goAgain: false,
     };
   },
   computed: {
@@ -318,9 +322,9 @@ export default {
       this.form = {
         start_time: undefined,
         roulette_name: undefined,
-        job_name: undefined,
-        start_level: undefined,
-        start_xp: undefined,
+        job_name: this.goAgain ? this.form.job_name : undefined,
+        start_level: this.goAgain ? this.form.finish_level : undefined,
+        start_xp: this.goAgain ? this.form.finish_xp : undefined,
         queue_pop_time: undefined,
         instance_name: undefined,
         finish_time: undefined,
