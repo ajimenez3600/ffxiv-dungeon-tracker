@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_15_013021) do
+ActiveRecord::Schema.define(version: 2022_01_16_233322) do
 
   create_table "expansions", force: :cascade do |t|
     t.string "name"
@@ -85,6 +85,7 @@ ActiveRecord::Schema.define(version: 2022_01_15_013021) do
     t.string "abbr"
     t.string "category"
     t.integer "role_id"
+    t.boolean "is_class", default: false, null: false
   end
 
   create_table "levels", force: :cascade do |t|
