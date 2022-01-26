@@ -2,7 +2,7 @@ class InstanceEntriesController < ApplicationController
 
   def new
     @instance_entry = InstanceEntry.new
-    @jobs = Job.where(is_class: false).map(&:name)
+    @jobs = Job.where(is_class: false).sort_by{ |x| x.name }.map(&:name)
     @instances = get_instance_groups
     @roulettes = Roulette.all.map(&:name)
   end

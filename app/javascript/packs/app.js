@@ -9,10 +9,9 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import '@fortawesome/fontawesome-free/css/all.css'
 
-//import RouletteXpCalculator from '../components/RouletteXpCalculator'
+import RouletteCalculatorNewView from '../views/metrics/roulette_calculator/new.vue'
 import InstanceEntriesNewView from '../views/instance_entries/new.vue'
 import { Pivot } from 'vue-pivot-table-plus';
-
 
 document.addEventListener('DOMContentLoaded', () => {
   var colors = [
@@ -30,30 +29,31 @@ document.addEventListener('DOMContentLoaded', () => {
     new Vue({ el: navbar })
   }
 
-  new Vue({
-    el: '#instance-entries-new-view',
-    components: {
-      'instance-entries-new-view': InstanceEntriesNewView,
-    },
-  });
-
-  new Vue({
-    el: '#pivot-table',
-    components: {
-      'pivot-table': Pivot,
-    },
-  });
-
-  var dungeonForm = document.getElementById('dungeon-form')
-  if (dungeonForm !== null) {
+  if (document.getElementById('instance-entries-new-view') !== null) {
     new Vue({
-      el: dungeonForm,
-      data: {
-        jobs: JSON.parse(dungeonForm.dataset.jobs),
-        instances: JSON.parse(dungeonForm.dataset.instances),
-        roulettes: JSON.parse(dungeonForm.dataset.roulettes)
+      el: '#instance-entries-new-view',
+      components: {
+        'instance-entries-new-view': InstanceEntriesNewView,
       },
-    })
+    });
+  }
+
+  if (document.getElementById('roulette-calculator-new-view') !== null) {
+    new Vue({
+      el: '#roulette-calculator-new-view',
+      components: {
+        'roulette-calculator-new-view': RouletteCalculatorNewView,
+      },
+    });
+  }
+
+  if (document.getElementById('pivot-table') !== null) {
+    new Vue({
+      el: '#pivot-table',
+      components: {
+        'pivot-table': Pivot,
+      },
+    });
   }
 
   var rouletteMetrics = document.getElementById('roulette-metrics')
@@ -102,16 +102,16 @@ document.addEventListener('DOMContentLoaded', () => {
     })
   }
 
-  var xpCalculator = document.getElementById('roulette-xp-calculator')
-  if (xpCalculator !== null) {
-    var roulettes = JSON.parse(document.getElementById('roulette-names').dataset.roulettes)
-    new Vue({
-      el: xpCalculator,
-      components: { RouletteXpCalculator },
-      template: `<RouletteXpCalculator v-bind:roulettes="roulettes" />`,
-      data: {
-        roulettes: roulettes,
-      },
-    })
-  }
+  // var xpCalculator = document.getElementById('roulette-xp-calculator')
+  // if (xpCalculator !== null) {
+  //   var roulettes = JSON.parse(document.getElementById('roulette-names').dataset.roulettes)
+  //   new Vue({
+  //     el: xpCalculator,
+  //     components: { RouletteXpCalculator },
+  //     template: `<RouletteXpCalculator v-bind:roulettes="roulettes" />`,
+  //     data: {
+  //       roulettes: roulettes,
+  //     },
+  //   })
+  // }
 })

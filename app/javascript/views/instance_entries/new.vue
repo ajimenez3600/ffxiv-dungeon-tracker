@@ -1,5 +1,5 @@
 <template>
-<b-container fluid>
+<b-container fluid id=main-container>
   <b-alert :variant="alert.variant" :show="alert.dismissCountdown" dismissible @dismissed="alert.dismissCountdown=0" @dismiss-count-down="countdownChanged">
     {{alert.message}}
   </b-alert>
@@ -57,7 +57,37 @@
               <i class='fas fa-question-circle'></i>
             </b-btn>
           </label>
-          <b-form-input id="start_xp" type="number" required min=0 v-model="form.start_xp" />
+          <b-input-group>
+            <b-form-input id="start_xp" type="number" required min=0 v-model="form.start_xp" />
+            <b-input-group-append>
+              <b-btn variant=secondary id="xp-popover-reactive">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+              </b-btn>
+            </b-input-group-append>
+          </b-input-group>
+          <b-popover target="xp-popover-reactive" triggers=click placement=auto @show=onXpShow :show.sync=showXpPopover container=main-container>
+            <section>
+              <b-row v-for="row, ix in xpAdder" :key="'xpAdderRow-'+ix" class=my-2>
+                <b-col cols=8>
+                  <b-form-input min=0 v-model=row.amount />
+                </b-col>
+                <b-col>
+                  <b-btn v-if="ix==xpAdder.length-1" @click=onAddXpRow>
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                  </b-btn>
+                  <b-btn v-else @click=onDeleteXpRow(ix)>
+                    <i class="fa fa-minus" aria-hidden="true"></i>
+                  </b-btn>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col>
+                  <b-btn @click="showXpPopover=false" size=sm variant=danger>Close</b-btn>
+                  <b-btn @click=onXpOk size=sm variant=primary>Add</b-btn>
+                </b-col>
+              </b-row>
+            </section>
+          </b-popover>
         </b-col>
       </b-form-row>
       <b-form-row>
@@ -295,6 +325,8 @@ export default {
       form: { },
       alert: { },
       goAgain: false,
+      showXpPopover: false,
+      xpAdder: [],
     };
   },
   computed: {
@@ -352,6 +384,23 @@ export default {
         let end_parsed = moment(end, 'YYYY-MM-DDTHH:mm')
         return end_parsed.diff(start_parsed, 'hours')
       }
+    },
+    onXpShow() {
+      this.xpAdder = [ ]
+      this.onAddXpRow()
+    },
+    onAddXpRow() {
+      this.xpAdder.push({ amount: 0 })
+    },
+    onDeleteXpRow(ix) {
+      this.xpAdder.splice(ix, 1)
+    },
+    onXpOk() {
+      let total = this.xpAdder.map(x => x.amount).reduce((memo, x) => {
+        return Number(memo) + Number(x);
+      })
+      this.form.start_xp = Number(this.form.start_xp) + total
+      this.showXpPopover = false
     },
     onSubmit(event) {
       event.preventDefault();

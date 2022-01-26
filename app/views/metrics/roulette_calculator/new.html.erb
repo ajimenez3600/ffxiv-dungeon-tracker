@@ -1,8 +1,7 @@
-<% javascript_pack_tag 'metrics/roulettes_calculator/new' %>
 <% stylesheet_pack_tag 'metrics/roulettes_calculator/new' %>
 <% content_for :title, 'Daily Roulette Optimizer' %>
 <h1><%= yield(:title) %></h1>
 
-<b-container fluid id='roulette-calculator-new-view'>
+<div id='roulette-calculator-new-view'>
   <roulette-calculator-new-view :roulettes="<%= @roulettes.to_json %>" />
-</b-container>
+</div>

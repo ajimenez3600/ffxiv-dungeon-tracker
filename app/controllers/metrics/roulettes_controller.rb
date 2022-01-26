@@ -76,7 +76,7 @@ class Metrics::RoulettesController < ApplicationController
         roulette: ie.roulette.name,
         queue_time: ie.minutes_to_queue_pop,
         instance_time: ie.minutes_in_instance,
-        xp: combat_and_bonus_xp,
+        xp: ie.combat_and_bonus_xp,
         level: ie.start_level
       }
     end
