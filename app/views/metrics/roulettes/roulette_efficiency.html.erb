@@ -16,8 +16,8 @@
       fieldsOrder: {},
     }"
     :reducer="(accumulator, item, index, array) => {
-      var sum = item.xp / (item.queue_time + item.instance_time)) / array.length;
-      return accumulator + sum
+      var sum = accumulator + (item.xp / (item.queue_time + item.instance_time));
+      return (index == array.length - 1) ? (sum / array.length) : sum;
     }"
   >
 </div>
