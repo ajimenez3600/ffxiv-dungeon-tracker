@@ -1,17 +1,6 @@
-import Vue from 'vue/dist/vue.esm'
-import Chart, { registerables } from 'chart.js/auto';
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
-
-Vue.use(BootstrapVue)
-Vue.use(IconsPlugin)
-
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
-import '@fortawesome/fontawesome-free/css/all.css'
-
-import RouletteCalculatorNewView from '../views/metrics/roulette_calculator/new.vue'
-import InstanceEntriesNewView from '../views/instance_entries/new.vue'
-import { Pivot } from 'vue-pivot-table-plus';
+// Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
+import RouletteCalculatorNewView from './views/metrics/roulette_calculator/new.vue'
+import InstanceEntriesNewView from './views/instance_entries/new.vue'
 
 document.addEventListener('DOMContentLoaded', () => {
   var colors = [

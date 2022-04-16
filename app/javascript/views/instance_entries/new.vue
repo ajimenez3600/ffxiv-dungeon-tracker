@@ -415,7 +415,7 @@ export default {
         method: 'POST',
         url: '/instance_entries',
         headers: {
-          'Conten-Type': 'application/json',
+          'Content-Type': 'application/json',
           'X-Requested-With': 'XMLHttpRequest',
         },
         data: this.form
