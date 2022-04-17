@@ -4,40 +4,56 @@
 		{{alert.message}}
 	</va-alert>
 
-  <va-form tag='form' @submit.prevent="handleSubmit">
+  <va-form tag='form' @submit.prevent="onSubmit">
 		<section id="pre-instance">
-			<h3>Pre-Instance</h3>
 			<h5>Queue Start Time</h5>
-			<div class=row>
-				<div class='flex md12'>
-					<va-date-picker v-model="form.startDate" />
-					<va-time-picker v-model="form.startTime" />
+			<div class='row my-2'>
+				<div class='flex md6 px-1'>
+					<va-date-input v-model="form.startTime" />
+				</div>
+				<div class='flex md6 px-1'>
+					<va-time-input v-model="form.startTime">
+						<template #append>
+							<va-button @click='setCurrentDateTime("start")'>Set Now</va-button>
+						</template>
+					</va-time-input>
 				</div>
 			</div>
-			<div class=row>
+			<div class='row my-2'>
 				<div class='flex md12'>
 					<va-select label='Roulette Name' v-model="form.rouletteName" :options=roulettes />
 				</div>
 			</div>
-			<div class=row>
+			<div class='row my-2'>
 				<div class='flex md12'>
 					<va-select label='Job Name (*)' v-model="form.jobName" :options=jobs />
 				</div>
 			</div>
-			<div class=row>
+			<div class='row my-2'>
 				<div class='flex md6'>
 					<va-input label='Starting Level (*)' v-model='form.startLevel' />
 				</div>
 				<div class='flex md6'>
-					<va-input label='Starting XP (*)' v-model='form.startXp' />
-					reimpl the xp adder
+					<va-input label='Starting XP (*)' v-model='form.startXp'>
+						<template #append>
+							<va-button @click="onXpShow">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+							</va-button>
+						</template>
+					</va-input>
 				</div>
 			</div>
 			<h5>Queue Pop Time</h5>
-			<div class=row>
-				<div class='flex md12'>
-					<va-date-picker v-model="form.queueDate" />
-					<va-time-picker v-model="form.queueTime" />
+			<div class='row my-2'>
+				<div class='flex md6 px-1'>
+					<va-date-input v-model="form.queueTime" />
+				</div>
+				<div class='flex md6 px-1'>
+					<va-time-input v-model="form.queueTime">
+						<template #append>
+							<va-button @click='setCurrentDateTime("queue")'>Set Now</va-button>
+						</template>
+					</va-time-input>
 				</div>
 			</div>
 			<div class=row v-if=longQueue>
@@ -53,16 +69,36 @@
 		</section>
 
 		<section id='instance'>
-			<h3>Instance(*)</h3>
+			<hr />
+			<div>
+				<va-card v-for="key in Object.keys(instances)" :key=key>
+					<va-card-title>
+					</va-card-title>
+					<va-card-actions>
+						<va-collapse align='between' v-if='instances[key] instanceof Array' :id='key'>
+							<va-radio v-for="(option, index) in instances[key]" v-model="form.instanceName" :key="index" :option="option" />
+						</va-collapse>
+						<va-collapse v-else v-for='key2 in Object.keys(instances[key])' :key=key2 :id="key + ' ' + key2">
+							<va-radio v-for="(option, index) in instances[key][key2]" v-model="form.instanceName" :key="index" :option="option" />
+						</va-collapse>
+					</va-card-actions>
+				</va-card>
+			</div>
 		</section>
 
 		<section id='post-instance'>
-			<h3>Post-Instance</h3>
+			<hr />
 			<h5>Instance Finish Time</h5>
-			<div class=row>
-				<div class='flex md12'>
-					<va-date-picker v-model="form.startDate" />
-					<va-time-picker v-model="form.startTime" />
+			<div class='row my-2'>
+				<div class='flex md6 px-1'>
+					<va-date-input v-model="form.finishTime" />
+				</div>
+				<div class='flex md6 px-1'>
+					<va-time-input v-model="form.finishTime">
+						<template #append>
+							<va-button @click='setCurrentDateTime("finish")'>Set Now</va-button>
+						</template>
+					</va-time-input>
 				</div>
 			</div>
 			<div class=row v-if=longInstance>
@@ -75,7 +111,7 @@
 					You seem to have been queued for a negative amount of time. Please take another look.
 				</div>
 			</div>
-			<div class=row>
+			<div class='row my-2'>
 				<div class='flex md6'>
 					<va-input label='Finish Level (*)' v-model='form.finishLevel' />
 				</div>
@@ -83,7 +119,55 @@
 					<va-input label='Finish XP (*)' v-model='form.finishXp' />
 				</div>
 			</div>
+			<div class='row my-2'>
+				<div class='flex md12'>
+					<va-input label="XP Bonus %" v-model='form.xpBonus' />
+				</div>
+			</div>
+			<div class='row my-2' v-if="!!form.rouletteName">
+				<div class='flex md12'>
+					<va-input label="Roulette Bonus XP" v-model='form.rouletteBonus' />
+				</div>
+			</div>
+			<div class='row my-2'>
+				<div class='flex md12'>
+					<va-input label="New Player Bonus XP" v-model='form.newPlayerBonus' />
+				</div>
+			</div>
+			<div class='row my-2'>
+				<div class='flex md12'>
+					<va-input label="Role In Need Bonus XP" v-model='form.roleInNeedBonus' />
+				</div>
+			</div>
+			<div class='row my-2'>
+				<div class='flex md12'>
+					<va-input label="Other Bonus XP" v-model='form.otherBonus' />
+				</div>
+			</div>
+			<div class='row my-2'>
+				<div class='flex md12'>
+					<va-input label="Commends Recieved" v-model='form.commends' />
+				</div>
+			</div>
+			<div class='row my-2'>
+				<div class='flex md12'>
+					<va-checkbox class=mt-4 v-model='form.queueOutlier' label='Are you queueing with someone?' />
+					<va-checkbox class=mt-4 v-model='form.durationOutlier' label='Did you join an in-progress group?' />
+					<va-checkbox class=mt-4 v-model='form.xpOutlier' label='Did you hit level cap (or were at level cap before starting)?' />
+				</div>
+			</div>
+			<div class='row my-2'>
+				<div class='flex md12'>
+					<va-input type=textarea label="Notes" class='mt-4' v-model='form.notes' />
+				</div>
+			</div>
 		</section>
+		<div class='row my-2' v-if="!!isValid">
+			<div class='flex md12'>
+				<va-button @click='goAgain=false'>Submit</va-button>
+				<va-button @click='goAgain=true'>Submit & Go Again</va-button>
+			</div>
+		</div>
   </va-form>
 </div>
 </template>
@@ -94,32 +178,148 @@ import moment from 'moment';
 export default {
 	data() {
 		return {
+			instances: { },
+			jobs: [],
+			roulettes: [],
+			csrf: { },
 			alert: {
-				color: 'primary',
-				show: true,
-				message: 'message',
+				show: false,
 			},
-			form: {
-				startDate: null,
-				startTime: null,
-			},
+			form: { },
+			goAgain: false,
+			showXpPopover: false,
+			xpAdder: [],
 		};
 	},
+	mounted() {
+		this.resetForm();
+		this.fetchData();
+	},
+	computed: {
+		longQueue() {
+			return this.getTimeDifference(this.form.startTime, this.form.queueTime) > 2;
+		},
+		negativeQueue() {
+			return this.getTimeDifference(this.form.startTime, this.form.queueTime) < 0;
+		},
+		longInstance() {
+			return this.getTimeDifference(this.form.queueTime, this.form.finishTime) > 2;
+		},
+		negativeInstance() {
+			return this.getTimeDifference(this.form.queueTime, this.form.finishTime) < 0;
+		},
+	},
 	methods: {
+		fetchData() {
+			axios.all(
+				axios.get('/api/instances'),
+				axios.get('/api/jobs'),
+				axios.get('/instances/roulettes')
+			).then((instances, jobs, roulettes) => {
+				this.instances = instances;
+				this.jobs = jobs;
+				this.roulettes = roulettes;
+			}
+		},
+		resetForm() {
+			this.form = {
+				startTime: new Date(),
+				rouletteName: undefined,
+				jobName: this.goAgain ? this.form.jobName : undefined,
+				startLevel: this.goAgain ? this.form.finishLevel : undefined,
+				startXp: this.goAgain ? this.form.finishXp : undefined,
+				queueTime: new Date(),
+				instanceName: undefined,
+				finishTime: new Date(),
+				finishLevel: undefined,
+				finishXp: undefined,
+				xpBonus: undefined,
+				rouletteBonus: undefined,
+				newPlayerBonus: undefined,
+				roleInNeedBonus: undefined,
+				otherBonus: undefined,
+				commends: undefined,
+				notes: undefined,
+				queueOutlier: false,
+				duratinOutler: false,
+				xpOutlier: false,
+			};
+		},
+		getTimeDifference(start, end) {
+			if (!start || !end) return false;
+
+			let start_parsed = moment(start, 'YYYY-MM-DDTHH:mm')
+			let end_parsed = moment(end, 'TTTT-MM-DDTHH:mm')
+			return end_parsed.diff(start_parsed, 'hours');
+		},
 		setCurrentDateTime(field) {
 			let dt = moment()
 			switch(field) {
 				case 'start':
-					this.form.startDate = dt.format('YYYY-MM-DD');
-					this.form.startTime = dt.format('HH:mm');
+					this.form.startTime = new Date();
 					break;
 				case 'pop':
+					this.form.queueTime = new Date();
 					break;
 				case 'finish':
+					this.form.finishTime = new Date();
 					break;
 				default:
 					break;
 			}
+		},
+		onXpShow() {
+			this.xpAdder = [ ];
+			this.onAddXpRow();
+		},
+		onAddXpRow() {
+			this.xpAdder.push({ amount: 0 });
+		},
+		onDeleteXpRow(ix) {
+			this.xpAdder.splice(ix, 1);
+		},
+		onXpOk() {
+			let total = this.xpAdder.map(x => x.amount).reduce((memo, x) => {
+				return Number(memo) + Number(x);
+			});
+			this.form.startXp = Number(this.form.startXp) + total;
+			this.showXpPopover = false;
+		},
+		isValid() {
+			return false;
+		},
+		onSubmit(event) {
+			event.preventDefault();
+
+			if (!this.form.rouletteName) {
+				this.form.rouletteBonus = 0;
+			}
+			this.form.utf8 = '✓';
+			this.form.authenticity_token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+			axios({
+				method: 'POST',
+				url: '/instance_entries',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-Requested-With': 'XMLHttpRequest',
+				},
+				data: this.form,
+			}).then(() => {
+				this.resetForm();
+				window.scrollTo(0,0);
+				this.showSuccess();
+			}).catch(error => {
+				console.error(error);
+				this.showError(error);
+			});
+		},
+		showError() {
+			this.alert = {
+				variant: 'danger',
+				show: true,
+				message: 'Something messed, up, details have been logged to the console, but if the error persists, please contact me!',
+			};
 		},
 	}
 }
