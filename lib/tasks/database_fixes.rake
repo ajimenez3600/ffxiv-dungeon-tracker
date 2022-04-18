@@ -16,4 +16,14 @@ namespace :database_fixes do
       entry.save
     end
   end
+
+  desc "tag jobs with is_class?"
+  task tag_classes: :environment do
+    Job.all.each do |job|
+      if ["ACN", "ARC", "CNJ", "GLA", "LNC", "MRD", "PGL", "ROG", "THM"].include? job.abbr then
+        job.is_class = true
+        job.save
+      end
+    end
+  end
 end

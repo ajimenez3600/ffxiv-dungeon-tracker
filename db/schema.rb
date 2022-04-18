@@ -10,18 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_16_233322) do
-
+ActiveRecord::Schema[7.0].define(version: 2022_01_16_233322) do
   create_table "expansions", force: :cascade do |t|
     t.string "name"
     t.integer "api_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "instance_entries", force: :cascade do |t|
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.datetime "start_time", null: false
     t.integer "start_level", null: false
     t.integer "start_xp", null: false
@@ -49,8 +48,8 @@ ActiveRecord::Schema.define(version: 2022_01_16_233322) do
   create_table "instances", force: :cascade do |t|
     t.string "name"
     t.string "instance_type"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "expansion"
     t.integer "api_id"
     t.integer "required_level"
@@ -79,8 +78,8 @@ ActiveRecord::Schema.define(version: 2022_01_16_233322) do
   end
 
   create_table "jobs", force: :cascade do |t|
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "name"
     t.string "abbr"
     t.string "category"
@@ -92,8 +91,8 @@ ActiveRecord::Schema.define(version: 2022_01_16_233322) do
     t.integer "number"
     t.integer "exp_to_next"
     t.integer "item_level_sync"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "recommended_dungeon_id"
     t.integer "total_xp"
   end
@@ -101,14 +100,14 @@ ActiveRecord::Schema.define(version: 2022_01_16_233322) do
   create_table "roles", force: :cascade do |t|
     t.integer "api_id"
     t.string "name"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "roulettes", force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "grant_xp", default: false, null: false
   end
 

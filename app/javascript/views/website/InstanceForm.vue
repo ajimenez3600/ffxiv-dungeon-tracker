@@ -1,6 +1,6 @@
 <template>
-<div>
-	<va-alert :color="alert.color" v-model="alert.show" closeable>
+<div class=px-4>
+	<va-alert :color="alert.variant" v-model="alert.show" closeable>
 		{{alert.message}}
 	</va-alert>
 
@@ -73,15 +73,14 @@
 			<div>
 				<va-card v-for="key in Object.keys(instances)" :key=key>
 					<va-card-title>
+						{{key}}
 					</va-card-title>
-					<va-card-actions>
-						<va-collapse align='between' v-if='instances[key] instanceof Array' :id='key'>
-							<va-radio v-for="(option, index) in instances[key]" v-model="form.instanceName" :key="index" :option="option" />
-						</va-collapse>
-						<va-collapse v-else v-for='key2 in Object.keys(instances[key])' :key=key2 :id="key + ' ' + key2">
-							<va-radio v-for="(option, index) in instances[key][key2]" v-model="form.instanceName" :key="index" :option="option" />
-						</va-collapse>
-					</va-card-actions>
+					<va-card-content>
+						<div class="row justify--center">
+							<better-collapse v-if="instances[key] instanceof Array" :header="key" :value="form.instanceName" :options="instances[key]" class="flex lg10" @updated="onRadioSelect" />
+							<better-collapse v-else v-for="key2 in Object.keys(instances[key])" :header="key2" :value="form.instanceName" :options="instances[key][key2]" class="flex lg2" @updated="onRadioSelect" />
+						</div>
+					</va-card-content>
 				</va-card>
 			</div>
 		</section>
@@ -163,9 +162,10 @@
 			</div>
 		</section>
 		<div class='row my-2' v-if="!!isValid">
-			<div class='flex md12'>
-				<va-button @click='goAgain=false'>Submit</va-button>
-				<va-button @click='goAgain=true'>Submit & Go Again</va-button>
+			<div class='flex md2' />
+			<div class='flex md10'>
+				<va-button @click='goAgain=false' type=submit>Submit</va-button>
+				<va-button @click='goAgain=true' type=submit>Submit & Go Again</va-button>
 			</div>
 		</div>
   </va-form>
@@ -173,9 +173,14 @@
 </template>
 
 <script>
+import axios from 'axios';
 import moment from 'moment';
+import BetterCollapse from '@/components/shared/BetterCollapse.vue';
 
 export default {
+	components: {
+		BetterCollapse,
+	},
 	data() {
 		return {
 			instances: { },
@@ -211,15 +216,9 @@ export default {
 	},
 	methods: {
 		fetchData() {
-			axios.all(
-				axios.get('/api/instances'),
-				axios.get('/api/jobs'),
-				axios.get('/instances/roulettes')
-			).then((instances, jobs, roulettes) => {
-				this.instances = instances;
-				this.jobs = jobs;
-				this.roulettes = roulettes;
-			}
+			axios.get('/api/instances').then((response) => this.instances = response.data);
+			axios.get('/api/jobs').then((response) => this.jobs = response.data);
+			axios.get('/api/roulettes').then((response) => this.roulettes = response.data);
 		},
 		resetForm() {
 			this.form = {
@@ -229,7 +228,7 @@ export default {
 				startLevel: this.goAgain ? this.form.finishLevel : undefined,
 				startXp: this.goAgain ? this.form.finishXp : undefined,
 				queueTime: new Date(),
-				instanceName: undefined,
+				instanceName: "",
 				finishTime: new Date(),
 				finishLevel: undefined,
 				finishXp: undefined,
@@ -241,7 +240,7 @@ export default {
 				commends: undefined,
 				notes: undefined,
 				queueOutlier: false,
-				duratinOutler: false,
+				durationOutler: false,
 				xpOutlier: false,
 			};
 		},
@@ -286,7 +285,10 @@ export default {
 			this.showXpPopover = false;
 		},
 		isValid() {
-			return false;
+			return true;
+		},
+		onRadioSelect(event) {
+			this.form.instanceName = event;
 		},
 		onSubmit(event) {
 			event.preventDefault();
@@ -295,16 +297,40 @@ export default {
 				this.form.rouletteBonus = 0;
 			}
 			this.form.utf8 = '✓';
-			this.form.authenticity_token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      this.form.authenticity_token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 			axios({
 				method: 'POST',
-				url: '/instance_entries',
+				url: '/api/instance_entries',
 				headers: {
 					'Content-Type': 'application/json',
 					'X-Requested-With': 'XMLHttpRequest',
 				},
-				data: this.form,
+				data: {
+					utf8: '✓',
+					authenticity_token: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+
+					start_time: this.form.startTime,
+					roulette_name: this.form.rouletteName,
+					job_name: this.form.jobName,
+					start_level: this.form.startLevel,
+					start_xp: this.form.startXp,
+					queue_pop_time: this.form.queueTime,
+					instance_name: this.form.instanceName,
+					finish_time: this.form.finishTime,
+					finish_level: this.form.finishLevel,
+					finish_xp: this.form.finishXp,
+					xp_bonus: this.form.xpBonus,
+					roulette_bonus: this.form.rouletteBonus,
+					new_player_bonus: this.form.newPlayerBonus,
+					role_in_need_bonus: this.form.roleInNeedBonus,
+					other_bonus: this.form.otherBonus,
+					commends: this.form.commends,
+					notes: this.form.notes,
+					queue_outlier: this.form.queueOutlier,
+					duration_outlier: this.form.durationOutlier,
+					xp_outlier: this.form.xpOutlier,
+				},
 			}).then(() => {
 				this.resetForm();
 				window.scrollTo(0,0);
@@ -313,6 +339,14 @@ export default {
 				console.error(error);
 				this.showError(error);
 			});
+		},
+		showSuccess() {
+			this.alert = {
+				variant: 'success',
+				show: true,
+				message: 'Data Submitted; Thank you!',
+			},
+			setTimeout(() => this.alert.show = false, 5000);
 		},
 		showError() {
 			this.alert = {

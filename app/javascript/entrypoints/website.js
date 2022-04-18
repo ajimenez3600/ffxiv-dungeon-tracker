@@ -14,6 +14,11 @@ import '@fortawesome/fontawesome-free/css/all.css'
 const app = createApp(App);
 
 app.use(router);
-app.use(VuesticPlugin)
+app.use(VuesticPlugin, {
+	colors: {
+		primary: '#794bc4',
+		info: '#794bc4',
+	}
+})
 
 app.mount('#app');

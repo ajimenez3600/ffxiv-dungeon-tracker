@@ -4,6 +4,7 @@ namespace :patch_update do
     Rake::Task['patch_update:fetch_expansions'].invoke
     Rake::Task['patch_update:fetch_instances'].invoke
     Rake::Task['patch_update:fetch_jobs'].invoke
+    Rake::Task['database_fixes:tag_classes'].invoke
     Rake::Task['patch_update:fetch_xp_table'].invoke
   end
 
@@ -39,7 +40,7 @@ namespace :patch_update do
   desc "Fetches Instance listing from xivapi"
   task fetch_instances: :environment do
     rejected_instances = ['Seasonal Dungeon', 'Gold Saucer', 'The Masked Carnivale', 'Disciples of the Land', 'Quest Battles']
-    
+
     response = HTTParty.get('https://xivapi.com/InstanceContent?limit=1000&columns=ID,Name,ContentType.Name,ContentFinderCondition,BossExp1,BossExp2,BossExp3,BossExp4,FinalBossExp,InstanceClearExp,NewPlayerBonusA,NewPlayerBonusB')
     if response.code != 200 then
       puts response.code
@@ -115,10 +116,13 @@ namespace :patch_update do
 
     job_names = fetched_jobs.map { |job| job['NameEnglish_en'] }
     Job.all.each { |job| job.delete unless job_names.include?(job.name) }
-    
+
     fetched_jobs.each do |fetched_job|
+      if ["GNB", "DNC", "SGE", "RPR"].include? fetched_job['Abbreviation']
+        fetched_job['CanQueueForDuty'] = 1  # xivapi bad
+      end
       next unless fetched_job['CanQueueForDuty'] == 1
-      
+
       job = Job.find_by_name(fetched_job['NameEnglish_en'])
       if job.nil?
         job = Job.new(name: fetched_job['NameEnglish_en'])
