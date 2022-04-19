@@ -7,7 +7,18 @@
   <va-form tag='form' @submit.prevent="onSubmit">
 		<section id="pre-instance">
 			<h5>Queue Start Time</h5>
-			<date-time-selector v-model='form.startTime' />
+			<div class='row my-2'>
+				<div class='flex md6 px-1'>
+					<va-date-input v-model="form.startTime" />
+				</div>
+				<div class='flex md6 px-1'>
+					<va-time-input v-model="form.startTime">
+						<template #append>
+							<va-button @click='setCurrentDateTime("start")'>Set Now</va-button>
+						</template>
+					</va-time-input>
+				</div>
+			</div>
 			<div class='row my-2'>
 				<div class='flex md12'>
 					<va-select label='Roulette Name' v-model="form.rouletteName" :options=roulettes />
@@ -19,10 +30,10 @@
 				</div>
 			</div>
 			<div class='row my-2'>
-				<div class='flex md6 pr-1'>
+				<div class='flex md6'>
 					<va-input label='Starting Level (*)' v-model='form.startLevel' />
 				</div>
-				<div class='flex md6 pl-1'>
+				<div class='flex md6'>
 					<va-input label='Starting XP (*)' v-model='form.startXp'>
 						<template #append>
 							<va-button @click="onXpShow">
@@ -33,7 +44,18 @@
 				</div>
 			</div>
 			<h5>Queue Pop Time</h5>
-			<date-time-selector v-model='form.queueTime' />
+			<div class='row my-2'>
+				<div class='flex md6 px-1'>
+					<va-date-input v-model="form.queueTime" />
+				</div>
+				<div class='flex md6 px-1'>
+					<va-time-input v-model="form.queueTime">
+						<template #append>
+							<va-button @click='setCurrentDateTime("queue")'>Set Now</va-button>
+						</template>
+					</va-time-input>
+				</div>
+			</div>
 			<div class=row v-if=longQueue>
 				<div class='flex md12'>
 					It looks like you spent {{queueTime}} hours in queue, is that right?
@@ -49,14 +71,14 @@
 		<section id='instance'>
 			<hr />
 			<div>
-				<va-card v-for="key in Object.keys(instances)" :key=key class='my-1'>
-					<va-card-title class='pb-0 pt-1 px-1'>
+				<va-card v-for="key in Object.keys(instances)" :key=key>
+					<va-card-title>
 						{{key}}
 					</va-card-title>
-					<va-card-content class='pt-0 pb-2'>
+					<va-card-content>
 						<div class="row justify--center">
-							<better-collapse v-if="instances[key] instanceof Array" :header="key" :value="form.instanceName" :options="instances[key]" class="flex lg10 px-2" @updated="onRadioSelect" />
-							<better-collapse v-else v-for="key2 in Object.keys(instances[key])" :header="key2" :value="form.instanceName" :options="instances[key][key2]" class="flex lg2 px-2" @updated="onRadioSelect" />
+							<better-collapse v-if="instances[key] instanceof Array" :header="key" :value="form.instanceName" :options="instances[key]" class="flex lg10" @updated="onRadioSelect" />
+							<better-collapse v-else v-for="key2 in Object.keys(instances[key])" :header="key2" :value="form.instanceName" :options="instances[key][key2]" class="flex lg2" @updated="onRadioSelect" />
 						</div>
 					</va-card-content>
 				</va-card>
@@ -66,7 +88,18 @@
 		<section id='post-instance'>
 			<hr />
 			<h5>Instance Finish Time</h5>
-			<date-time-selector v-model='form.finishTime' />
+			<div class='row my-2'>
+				<div class='flex md6 px-1'>
+					<va-date-input v-model="form.finishTime" />
+				</div>
+				<div class='flex md6 px-1'>
+					<va-time-input v-model="form.finishTime">
+						<template #append>
+							<va-button @click='setCurrentDateTime("finish")'>Set Now</va-button>
+						</template>
+					</va-time-input>
+				</div>
+			</div>
 			<div class=row v-if=longInstance>
 				<div class='flex md12'>
 					It looks like you spent {{instanceTime}} hours in queue, is that right?
@@ -78,10 +111,10 @@
 				</div>
 			</div>
 			<div class='row my-2'>
-				<div class='flex md6 pr-1'>
+				<div class='flex md6'>
 					<va-input label='Finish Level (*)' v-model='form.finishLevel' />
 				</div>
-				<div class='flex md6 pl-1'>
+				<div class='flex md6'>
 					<va-input label='Finish XP (*)' v-model='form.finishXp' />
 				</div>
 			</div>
@@ -128,10 +161,11 @@
 				</div>
 			</div>
 		</section>
-		<div class='row my-2 justify--center' v-if="!!isValid">
-			<div class='flex'>
-				<va-button @click='goAgain=false' class='mx-1' type=submit>Submit</va-button>
-				<va-button @click='goAgain=true' class='mx-1' type=submit>Submit & Go Again</va-button>
+		<div class='row my-2' v-if="!!isValid">
+			<div class='flex md2' />
+			<div class='flex md10'>
+				<va-button @click='goAgain=false' type=submit>Submit</va-button>
+				<va-button @click='goAgain=true' type=submit>Submit & Go Again</va-button>
 			</div>
 		</div>
   </va-form>
@@ -142,12 +176,10 @@
 import axios from 'axios';
 import moment from 'moment';
 import BetterCollapse from '@/components/shared/BetterCollapse.vue';
-import DateTimeSelector from '@/components/shared/DateTimeSelector.vue';
 
 export default {
 	components: {
 		BetterCollapse,
-		DateTimeSelector,
 	},
 	data() {
 		return {

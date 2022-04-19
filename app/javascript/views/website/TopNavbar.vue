@@ -1,5 +1,5 @@
 <template>
-  <va-navbar color=primary shape class=mb-2>
+  <va-navbar color=primary shape>
     <template #left>
 			<va-navbar-item>
 				<router-link class='mx-2' to='/'>Form</router-link>
@@ -11,7 +11,7 @@
 					<router-link to="/metrics/roulettes/instance_time">Roulette Instance Time</router-link>
 					<router-link to="/metrics/roulettes/queue_time">Roulette Queue Time</router-link>
 					<router-link to="/metrics/roulettes/total_time">Roulette Total Time</router-link>
-					<router-link to="/metrics/roulettes/roulette_efficiency">Roulette Efficiency</router-link>					
+					<router-link to="/metrics/roulettes/roulette_efficiency">Roulette Efficiency</router-link>
 				</va-button-dropdown>
 			</va-navbar-item>
 		</template>

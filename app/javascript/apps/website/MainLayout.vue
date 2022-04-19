@@ -1,7 +1,9 @@
 <template>
 <div>
 	<TopNavbar />
-	<router-view />
+	<div class='row justify--center' style="background-color:#999999;">
+		<router-view  class='flex pt-2 xl-5 lg-8 md-10 sm-12' style="background-color:#ffffff;" />
+	</div>
 </div>
 </template>
 
@@ -18,3 +20,6 @@ export default {
 	},
 }
 </script>
+
+<style>
+</style>
