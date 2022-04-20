@@ -31,7 +31,7 @@ namespace :patch_update do
         if expansion.valid? then
           expansion.save
         else
-          puts expansion.errors
+          puts expansion.errors.full_messages
         end
       end
     end
@@ -96,7 +96,7 @@ namespace :patch_update do
         if instance.valid? then
           instance.save
         else
-          puts "failed to save instance #{instance.name}", instance.errors
+          puts "failed to save instance #{instance.name}", instance.errors.full_messages
         end
       end
     end
@@ -136,7 +136,7 @@ namespace :patch_update do
         if job.valid? then
           job.save
         else
-          puts job.errors
+          puts job.errors.full_messages
         end
       end
     end
@@ -169,7 +169,7 @@ namespace :patch_update do
         if level.valid? then
           level.save
         else
-          puts  level.errors
+          puts level.errors.full_messages
         end
       end
     end
@@ -186,7 +186,7 @@ namespace :patch_update do
         if level.valid? then
           level.save
         else
-          puts level.errors
+          puts level.errors.full_messages
         end
       end
     end

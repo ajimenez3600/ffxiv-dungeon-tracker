@@ -6,7 +6,7 @@
 	<div class='flex md6 pl-1'>
 		<va-time-input v-model="timeInput" @update:model-value=onUpdateTime>
 			<template #append>
-				<va-button @click='setCurrentDateTime'>Set Now</va-button>
+				<va-button class="mx-2" @click='setCurrentDateTime'>Set Now</va-button>
 			</template>
 		</va-time-input>
 	</div>
@@ -17,10 +17,11 @@
 import moment from 'moment';
 
 export default {
+	emits: ['input'],
 	props: {
-		value: {
+		modelValue: {
 			type: Date,
-			dafault: () => new Date(),
+			required: true,
 		},
 	},
 	data() {
@@ -33,6 +34,7 @@ export default {
 		setCurrentDateTime() {
 			this.timeInput = new Date();
 			this.dateInput = this.timeInput;
+			this.$emit('update:modelValue', this.dateInput)
 		},
 		onUpdateDate() {
 			this.dateInput.setHours(this.timeInput.getHours())
@@ -40,14 +42,14 @@ export default {
 			this.dateInput.setSeconds(this.timeInput.getSeconds())
 			this.dateInput.setMilliseconds(this.timeInput.getMilliseconds())
 			this.timeInput = this.dateInput;
-			this.$emit('input', this.dateInput)
+			this.$emit('update:modelValue', this.dateInput)
 		},
 		onUpdateTime() {
 			this.timeInput.setFullYear(this.dateInput.getFullYear())
 			this.timeInput.setMonth(this.dateInput.getMonth())
 			this.timeInput.setDate(this.dateInput.getDate())
 			this.dateInput = this.timeInput;
-			this.$emit('input', this.timeInput)
+			this.$emit('update:modelValue', this.timeInput)
 		}
 	},
 };

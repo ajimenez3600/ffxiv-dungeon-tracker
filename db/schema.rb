@@ -21,11 +21,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_01_16_233322) do
   create_table "instance_entries", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "start_time", null: false
+    t.datetime "start_time", precision: nil, null: false
     t.integer "start_level", null: false
     t.integer "start_xp", null: false
-    t.datetime "queue_pop_time", null: false
-    t.datetime "finish_time", null: false
+    t.datetime "queue_pop_time", precision: nil, null: false
+    t.datetime "finish_time", precision: nil, null: false
     t.integer "finish_level", null: false
     t.integer "finish_xp", null: false
     t.integer "xp_bonus", default: 100, null: false

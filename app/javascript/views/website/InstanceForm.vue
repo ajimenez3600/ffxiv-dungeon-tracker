@@ -7,7 +7,7 @@
   <va-form tag='form' @submit.prevent="onSubmit">
 		<section id="pre-instance">
 			<h5>Queue Start Time</h5>
-			<date-time-selector v-model='form.startTime' />
+			<date-time-selector v-if='form.startTime' v-model='form.startTime' />
 			<div class='row my-2'>
 				<div class='flex md12'>
 					<va-select label='Roulette Name' v-model="form.rouletteName" :options=roulettes />
@@ -33,17 +33,13 @@
 				</div>
 			</div>
 			<h5>Queue Pop Time</h5>
-			<date-time-selector v-model='form.queueTime' />
-			<div class=row v-if=longQueue>
-				<div class='flex md12'>
-					It looks like you spent {{queueTime}} hours in queue, is that right?
-				</div>
-			</div>
-			<div class=row v-if=negativeQueue>
-				<div class='flex md12'>
-					You seem to have been queued for a negative amount of time. Please take another look.
-				</div>
-			</div>
+			<date-time-selector v-if='form.queueTime' v-model='form.queueTime' @update:model-value=updateTimes />
+			<va-alert color=warning v-if="queueDuration > 120">
+				It looks like you spent {{Math.round(queueTime/60)}} hours in queue, is that right?
+			</va-alert>
+			<va-alert color=danger v-if="queueDuration < 0">
+				You seem to have been queued for a negative amount of time. Please take another look.
+			</va-alert>
 		</section>
 
 		<section id='instance'>
@@ -56,7 +52,7 @@
 					<va-card-content class='pt-0 pb-2'>
 						<div class="row justify--center">
 							<better-collapse v-if="instances[key] instanceof Array" :header="key" :value="form.instanceName" :options="instances[key]" class="flex lg10 px-2" @updated="onRadioSelect" />
-							<better-collapse v-else v-for="key2 in Object.keys(instances[key])" :header="key2" :value="form.instanceName" :options="instances[key][key2]" class="flex lg2 px-2" @updated="onRadioSelect" />
+							<better-collapse v-else v-for="key2 in Object.keys(instances[key])" :key=key2 :header="key2" :value="form.instanceName" :options="instances[key][key2]" class="flex lg2 px-2" @updated="onRadioSelect" />
 						</div>
 					</va-card-content>
 				</va-card>
@@ -66,17 +62,13 @@
 		<section id='post-instance'>
 			<hr />
 			<h5>Instance Finish Time</h5>
-			<date-time-selector v-model='form.finishTime' />
-			<div class=row v-if=longInstance>
-				<div class='flex md12'>
-					It looks like you spent {{instanceTime}} hours in queue, is that right?
-				</div>
-			</div>
-			<div class=row v-if=negativeInstance>
-				<div class='flex md12'>
-					You seem to have been queued for a negative amount of time. Please take another look.
-				</div>
-			</div>
+			<date-time-selector v-if=form.finishTime v-model='form.finishTime' @update:model-value=updateTimes />
+			<va-alert color=warning v-if="instanceDuration > 120">
+				It looks like you spent {{Math.round(instanceDuration/60)}} hours in queue, is that right?
+			</va-alert>
+			<va-alert color=danger v-if="instanceDuration < 0">
+				You seem to have been queued for a negative amount of time. Please take another look.
+			</va-alert>
 			<div class='row my-2'>
 				<div class='flex md6 pr-1'>
 					<va-input label='Finish Level (*)' v-model='form.finishLevel' />
@@ -135,6 +127,20 @@
 			</div>
 		</div>
   </va-form>
+
+	<va-modal ref=modal stateful>
+		<template #message>
+			{{xpAdder}}
+			<div class='row my-2' v-for="(item,ix) in xpAdder" :key=ix >
+				<va-input v-model=xpAdder[ix] />
+			</div>
+			<div class='row my-2'>
+				<va-button @click=onAddXpRow />
+			</div>
+			<va-button @click=onXpOk class='mx-1' variant=primary>Add</va-button>
+			<va-button @click="showXpAdder=false" class='mx-1' variant=secondary>Cancel</va-button>
+		</template>
+	</va-modal>
 </div>
 </template>
 
@@ -158,29 +164,17 @@ export default {
 			alert: {
 				show: false,
 			},
+			queueDuration: 0,
+			instanceDuration: 0,
 			form: { },
 			goAgain: false,
-			showXpPopover: false,
+			showXpAdder: false,
 			xpAdder: [],
 		};
 	},
 	mounted() {
 		this.resetForm();
 		this.fetchData();
-	},
-	computed: {
-		longQueue() {
-			return this.getTimeDifference(this.form.startTime, this.form.queueTime) > 2;
-		},
-		negativeQueue() {
-			return this.getTimeDifference(this.form.startTime, this.form.queueTime) < 0;
-		},
-		longInstance() {
-			return this.getTimeDifference(this.form.queueTime, this.form.finishTime) > 2;
-		},
-		negativeInstance() {
-			return this.getTimeDifference(this.form.queueTime, this.form.finishTime) < 0;
-		},
 	},
 	methods: {
 		fetchData() {
@@ -217,30 +211,21 @@ export default {
 
 			let start_parsed = moment(start, 'YYYY-MM-DDTHH:mm')
 			let end_parsed = moment(end, 'TTTT-MM-DDTHH:mm')
-			return end_parsed.diff(start_parsed, 'hours');
+			return end_parsed.diff(start_parsed, 'minutes');
 		},
-		setCurrentDateTime(field) {
-			let dt = moment()
-			switch(field) {
-				case 'start':
-					this.form.startTime = new Date();
-					break;
-				case 'pop':
-					this.form.queueTime = new Date();
-					break;
-				case 'finish':
-					this.form.finishTime = new Date();
-					break;
-				default:
-					break;
-			}
+		updateTimes() {
+			this.queueDuration = this.getTimeDifference(this.form.startTime, this.form.queueTime);
+			this.instanceDuration = this.getTimeDifference(this.form.queueTime, this.form.finishTime);
 		},
 		onXpShow() {
 			this.xpAdder = [ ];
 			this.onAddXpRow();
+			console.log('hey', this.xpAdder);
+			this.$refs.modal.show()
 		},
 		onAddXpRow() {
 			this.xpAdder.push({ amount: 0 });
+			console.log('hey', this.xpAdder);
 		},
 		onDeleteXpRow(ix) {
 			this.xpAdder.splice(ix, 1);
@@ -250,7 +235,7 @@ export default {
 				return Number(memo) + Number(x);
 			});
 			this.form.startXp = Number(this.form.startXp) + total;
-			this.showXpPopover = false;
+			this.showXpAdder = false;
 		},
 		isValid() {
 			return true;
